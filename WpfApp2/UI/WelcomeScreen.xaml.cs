@@ -1,0 +1,60 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
+
+
+namespace WpfApp2
+{
+
+    public partial class Window1 : Window
+    {
+        DatabaseHelper database;
+        ObservableCollection<ProjectShortEntry> list;
+
+        public Window1()
+        {
+            this.database = new DatabaseHelper();
+            list = new ProjectsListRequest(database).execute();
+            InitializeComponent();
+            this.ProjectList.ItemsSource = list;
+            if (list.Count == 0)
+                this.minifyProjectsList();
+            openMainWindow(1);
+
+        }
+
+
+        private void refreshList() {
+            list = new ProjectsListRequest(database).execute();
+            this.ProjectList.ItemsSource = list;
+        }
+
+       private void minifyProjectsList() {
+            this.Width = this.Width - this.ListGrid.MaxWidth;
+            this.MainGrid.Margin = new Thickness(10, 10, 10, 10);
+            this.ListGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void openMainWindow(long projectId) {
+            MainWindow main = new MainWindow(this.database, projectId);
+            main.Show();
+            this.Close();
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            CreateProjectScreen createProject = new CreateProjectScreen(this.database);
+            createProject.ShowDialog();
+            if (createProject.DialogResult == true)
+            {
+                refreshList();
+                long id = createProject.insertedId;
+                createProject = null;
+                openMainWindow(id);
+            }
+                
+        }
+    }
+}

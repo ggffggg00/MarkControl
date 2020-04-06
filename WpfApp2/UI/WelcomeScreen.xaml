@@ -1,0 +1,101 @@
+﻿<Window x:Class="WpfApp2.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp2"
+        mc:Ignorable="d" Height="400" Width="722" ResizeMode="NoResize" Background="#FF2F343F" WindowStyle="None" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid x:Name="MainGrid" Margin="204,10,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="43*"/>
+                <RowDefinition Height="147*"/>
+            </Grid.RowDefinitions>
+            <Image Margin="210,10,210,6" Source="На альфе.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Label Content="Mark Control" Margin="164,14,164,0" VerticalAlignment="Top" Foreground="#FFD2D9E2" FontSize="24" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" Grid.Row="1" HorizontalAlignment="Center"/>
+            <Grid HorizontalAlignment="Center" Height="164" Margin="141,0,141,10" Grid.Row="1" VerticalAlignment="Bottom" Width="226">
+                <Button Content="Создать новый проект" Margin="0" VerticalAlignment="Top" Click="Button_Click" Foreground="#FFC1C8D0" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Center" FontSize="14" Width="165" Height="29">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#FF2F343F"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF4B5364"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+
+                </Button>
+                <Button Content="Очистить хранилище" Margin="30,34,30,0" VerticalAlignment="Top" Click="Button_Click" Foreground="#FFC1C8D0" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Center" FontSize="14" Width="166" Height="29">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#FF2F343F"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF4B5364"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+
+                </Button>
+                <Button Content="Выход" Margin="30,68,30,0" VerticalAlignment="Top" Click="Button_Click" Foreground="#FFC1C8D0" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Center" FontSize="14" Width="166" Height="29">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#FF2F343F"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF4B5364"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+
+                </Button>
+            </Grid>
+
+        </Grid>
+        <Grid x:Name="ListGrid" Margin="0,0,523,0" Height="400" VerticalAlignment="Top" MaxWidth="199">
+            <ListView x:Name="ProjectList" BorderThickness="0" Background="#FF181B21">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock Foreground="#FFD2D9E2" Margin="20,10,20,10" FontSize="14" FontFamily="Gotham Pro Light"  Text="{Binding}" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Window>
