@@ -28,6 +28,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\WpfApp2.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -45,6 +46,7 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -75,14 +77,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DatabaseHelper.cs" />
-    <Compile Include="UI\WelcomeScreen.xaml.cs">
+    <Compile Include="DB\DatabaseHelper.cs" />
+    <Compile Include="DB\Models\ProjectData.cs" />
+    <Compile Include="Calc\FirstDecompositionCalculator.cs" />
+    <Compile Include="UI\Components\AbstractFragment.cs" />
+    <Compile Include="UI\Components\DataExplorerFragment.xaml.cs">
+      <DependentUpon>DataExplorerFragment.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\FirstDecomposition.xaml.cs">
+      <DependentUpon>FirstDecomposition.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\WelcomeScreen.xaml.cs">
       <DependentUpon>WelcomeScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\CreateProjectScreen.xaml.cs">
+    <Compile Include="UI\Windows\CreateProjectScreen.xaml.cs">
       <DependentUpon>CreateProjectScreen.xaml</DependentUpon>
     </Compile>
-    <Page Include="UI\MainWindow.xaml">
+    <Page Include="UI\Components\DataExplorerFragment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Components\FirstDecomposition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -90,15 +109,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\MainWindow.xaml.cs">
+    <Compile Include="UI\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UI\WelcomeScreen.xaml">
+    <Page Include="UI\Windows\WelcomeScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\CreateProjectScreen.xaml">
+    <Page Include="UI\Windows\CreateProjectScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -142,10 +161,9 @@
   <ItemGroup>
     <Resource Include="На альфе.png" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="DB\" />
-    <Folder Include="Math\" />
-    <Folder Include="UI\Components\" />
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.112.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.112.0\build\net46\System.Data.SQLite.Core.targets')" />

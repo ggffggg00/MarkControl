@@ -20,7 +20,7 @@ namespace WpfApp2
             this.ProjectList.ItemsSource = list;
             if (list.Count == 0)
                 this.minifyProjectsList();
-            openMainWindow(1);
+            openMainWindow(2);
 
         }
 
@@ -37,7 +37,7 @@ namespace WpfApp2
         }
 
         private void openMainWindow(long projectId) {
-            MainWindow main = new MainWindow(this.database, projectId);
+            MainWindow main = new MainWindow(this.database, (int)projectId);
             main.Show();
             this.Close();
 

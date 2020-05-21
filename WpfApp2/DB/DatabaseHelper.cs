@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
 using WpfApp2;
+using WpfApp2.DB.Models;
 
 public class ProjectShortEntry
 {
@@ -122,6 +123,7 @@ public class ProjectsListRequest : DatabaseHelper.DBRequest<ObservableCollection
 
 }
 
+
 public class CreateProjectRequest : DatabaseHelper.DBRequest<long>
 {
 
@@ -187,4 +189,30 @@ public class CreateProjectTableRequest : DatabaseHelper.DBRequest<bool>
         cmd.ExecuteNonQuery();
         return true;
     }
+}
+
+public class GetProjectDataRequest : DatabaseHelper.DBRequest<ProjectData>
+{
+
+    int id;
+
+    public GetProjectDataRequest(DatabaseHelper DBHelper, int id) : base(DBHelper) {
+        this.id = id;
+    }
+
+    protected override string getQueryStatement() { return "SELECT * FROM projects CROSS JOIN marks"+ id.ToString()+" WHERE id=" + id.ToString()+";"; }
+
+    protected override ProjectData handleRequest(SQLiteCommand command)
+    {
+
+        ObservableCollection<ProjectShortEntry> list = new ObservableCollection<ProjectShortEntry>();
+        SQLiteDataReader reader = command.ExecuteReader();
+        var resp = ProjectData.conctruct(reader);
+        reader.Close();
+
+        return resp;
+    }
+
+
+
 }
