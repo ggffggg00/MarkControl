@@ -5,24 +5,107 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp2.UI.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="538" d:DesignWidth="871">
-    <Grid>
-        <DataGrid 
-            x:Name="dtGrid"  
-            Margin="10,10,10,10" 
-            Height="320"
-            VerticalAlignment="Top" 
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch" 
-            ColumnWidth="*"  
-            FontSize="13"
+             Margin="-3,0,0,0"
+             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a">
+    <Border BorderBrush="#FF393F4C" BorderThickness="1" Padding="5" Margin="5">
+        <Grid>
+
+            <DataGrid 
+            x:Name="dtGrid"
+            Margin="5"
+            HorizontalContentAlignment="Center"
+            FontSize="12"
+            ColumnWidth="*"
+            HorizontalGridLinesBrush="#393f4c"
+            VerticalGridLinesBrush="#393f4c"
+            GridLinesVisibility="All"
+            Background="{x:Null}"
             FontFamily="Gotham Pro Light"
             ItemsSource="{Binding}" 
-            Background="{x:Null}"/>
-        <Grid Margin="10,335,10,10">
-            <Button Content="Добавить серию значений" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="162" Click="Button_Click"/>
+            BorderBrush="{x:Null}" >
+
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGrid}">
+                        <Setter Property="Background" Value="#22252a"/>
+                    </Style>
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <Setter Property="Background" Value="#2f343f"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="Foreground" Value="#9ba1a8"/>
+                    </Style>
+                    <Style TargetType="{x:Type DataGridRowHeader}">
+                        <Setter Property="Background" Value="#41416a"/>
+                    </Style>
+                    <Style TargetType="{x:Type DataGridCell}">
+                        <Setter Property="Padding" Value="10"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#19374f" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="BorderThickness" Value="0" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="Background" Value="#41416a"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Padding" Value="5,5,5,5"/>
+                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="Foreground" Value="#d3dae3"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    </Style>
+                </DataGrid.Resources>
+            </DataGrid>
+            <Grid Margin="10,335,10,10">
+                <Button Content="Применить изменения" Margin="0,0,10,0" VerticalAlignment="Top" Click="Button_Click" Foreground="#FF8B9EB5" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Right" FontSize="14" Width="229" Height="29" Background="#FF3D4055">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#FF2F343F"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF4B5364"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+
+                </Button>
+                <Button Content="Добавить эпоху" Margin="0,40,10,0" VerticalAlignment="Top" Click="Button_Click" Foreground="#FF8B9EB5" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Right" FontSize="14" Width="229" Height="29" Background="#FF3D4055">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#FF2F343F"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF4B5364"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+
+                </Button>
+            </Grid>
+
+
         </Grid>
-
-
-    </Grid>
+    </Border>
 </UserControl>

@@ -59,6 +59,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.112.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -159,7 +160,7 @@
     <Resource Include="Оригинал 590х595.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="На альфе.png" />
+    <Resource Include="UI\Windows\На альфе.png" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

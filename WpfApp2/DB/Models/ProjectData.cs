@@ -14,7 +14,8 @@ namespace WpfApp2.DB.Models
         public byte[] img { get; set; }
         public int marksCount { get; set; } = 0 ;
         public int blocksCount { get; set; } = 0;
-        public double eAccuracy { get; set; } = 0;
+        public double eAccuracy { get; set; } = 0.0001;
+        public double aAccuracy { get; set; } = 0.0001;
         public int epochCount { get; set; } = 0;
         public List<MarksRow> marks { get; set; }
 

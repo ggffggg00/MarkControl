@@ -85,7 +85,7 @@ namespace WpfApp2
             item.Header = title;
             item.Content = content;
             item.Height = 50;
-            item.Foreground = Brushes.White;
+            item.Foreground = (Brush)(new System.Windows.Media.BrushConverter().ConvertFromString("#d3dae3"));
             item.FontFamily = new FontFamily("Gotham Pro Light");
             item.FontSize = 14;
             item.MinWidth = 200;

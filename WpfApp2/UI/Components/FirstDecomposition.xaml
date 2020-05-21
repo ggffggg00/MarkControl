@@ -5,49 +5,69 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp2.UI.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="538" d:DesignWidth="871">
+             Margin="-3,0,0,0"
+             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a">
     <Grid>
+        <Border BorderBrush="#FF393F4C" BorderThickness="1" Padding="5" Margin="5">
+            <Grid>
 
 
-        <TabControl Margin="0,10,0,0">
-            <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="5" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <DataGrid 
+                <DataGrid 
+                            IsReadOnly="True"
                         x:Name="dtGrid"
                         HorizontalContentAlignment="Center"
-                        ColumnWidth="*"  
                         FontSize="12"
+                        MaxColumnWidth="130"
+                        ColumnWidth="100"
+                        HorizontalGridLinesBrush="#393f4c"
+                        VerticalGridLinesBrush="#393f4c"
+                        GridLinesVisibility="All"
+                        Background="{x:Null}"
                         FontFamily="Gotham Pro Light"
-                        ItemsSource="{Binding}" 
-                        Background="{x:Null}"/>
+                        ItemsSource="{Binding}" BorderBrush="{x:Null}" >
 
-                    <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+                    <DataGrid.Resources>
+                        <Style TargetType="{x:Type DataGrid}">
+                            <Setter Property="Background" Value="#22252a"/>
+                        </Style>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="Background" Value="#2f343f"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Foreground" Value="#9ba1a8"/>
+                        </Style>
+                        <Style TargetType="{x:Type DataGridRowHeader}">
+                            <Setter Property="Background" Value="#41416a"/>
+                        </Style>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="Padding" Value="10"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#19374f" />
+                                    <Setter Property="Foreground" Value="White" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="Background" Value="#41416a"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Padding" Value="5,5,5,5"/>
+                            <Setter Property="FontSize" Value="15"/>
+                            <Setter Property="Foreground" Value="#d3dae3"/>
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        </Style>
+                    </DataGrid.Resources>
+                </DataGrid>
 
-                    <DataGrid 
-                        x:Name="dtGrid2"  
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="{x:Null}" />
+
+                <Grid 
                         Margin="0,10,0,0"
-                        HorizontalContentAlignment="Stretch"
                         HorizontalAlignment="Left"
-                        ColumnWidth="*"  
-                        FontSize="12"
-                        FontFamily="Gotham Pro Light"
-                        ItemsSource="{Binding}" 
                         Background="{x:Null}" Width="865" Grid.Row="2"/>
 
 
-                </Grid>
-            </TabItem>
-            <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-        </TabControl>
-
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:WpfApp2"
         mc:Ignorable="d"
         Title="MainWindow" Height="598.5" Width="1053.5" ResizeMode="CanResizeWithGrip" Background="#FF2F343F" WindowStartupLocation="CenterScreen">
-    <Grid Margin="-4,0,-4,-4">
+    <Grid Margin="-4,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TabControl x:Name="tabControl" TabStripPlacement="Left" Background="#FF2F343F" Margin="0,0,0,27" >
+        <TabControl x:Name="tabControl" TabStripPlacement="Left" Background="#FF2F343F" BorderBrush="{x:Null}" >
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Template">
@@ -25,10 +25,10 @@
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Panel" Property="Background" Value="#FF2F343F" />
+                                        <Setter TargetName="Panel" Property="Background" Value="#22252a" /> 
                                     </Trigger>
                                     <Trigger Property="IsSelected" Value="False">
-                                        <Setter TargetName="Panel" Property="Background" Value="#22252a" />
+                                        <Setter TargetName="Panel" Property="Background" Value="#FF2F343F" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>

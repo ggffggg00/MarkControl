@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-
+using System.Windows.Controls;
 
 namespace WpfApp2
 {
@@ -55,6 +55,17 @@ namespace WpfApp2
                 openMainWindow(id);
             }
                 
+        }
+
+
+        private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var image = sender as Image;
+            if (image != null)
+            {
+                System.Console.Out.WriteLine("Hello!");
+                System.Console.Out.WriteLine(image.Tag);
+            }
         }
     }
 }
