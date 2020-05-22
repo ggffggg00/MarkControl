@@ -36,6 +36,7 @@ namespace WpfApp2
             this.id = projectId;
             InitializeComponent();
 
+
             var projectData = new GetProjectDataRequest(db, id).execute();
 
             DataExplorerFragment dtExp = new DataExplorerFragment(db, projectData);

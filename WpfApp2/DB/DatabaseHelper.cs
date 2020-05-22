@@ -5,10 +5,11 @@ using System.IO;
 using WpfApp2;
 using WpfApp2.DB.Models;
 
+
 public class ProjectShortEntry
 {
-    string name { get; set; }
-    int id { get; set; }
+    public string name { get; set; }
+    public int id { get; set; }
 
     public ProjectShortEntry(string name, int id)
     {
@@ -22,6 +23,7 @@ public class ProjectShortEntry
     }
 
 }
+
 
 
 public class DatabaseHelper

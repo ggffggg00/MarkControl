@@ -10,7 +10,7 @@ namespace WpfApp2
     public partial class Window1 : Window
     {
         DatabaseHelper database;
-        ObservableCollection<ProjectShortEntry> list;
+        ObservableCollection<ProjectShortEntry> list {get; set;}
 
         public Window1()
         {
@@ -20,13 +20,14 @@ namespace WpfApp2
             this.ProjectList.ItemsSource = list;
             if (list.Count == 0)
                 this.minifyProjectsList();
-            openMainWindow(2);
+            //openMainWindow(2);
 
         }
 
 
         private void refreshList() {
             list = new ProjectsListRequest(database).execute();
+            this.ProjectList.DataContext = list;
             this.ProjectList.ItemsSource = list;
         }
 
@@ -66,6 +67,13 @@ namespace WpfApp2
                 System.Console.Out.WriteLine("Hello!");
                 System.Console.Out.WriteLine(image.Tag);
             }
+        }
+
+        private void ProjectList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ProjectShortEntry pr = (ProjectShortEntry)ProjectList.SelectedItem;
+            openMainWindow(pr.id);
+            
         }
     }
 }

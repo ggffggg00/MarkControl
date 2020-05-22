@@ -4,13 +4,86 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp2.UI.Components"
+             xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+             xmlns:Primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
              mc:Ignorable="d" 
              Margin="-3,0,0,0"
              d:DesignHeight="538" d:DesignWidth="871" Background="#22252a">
+
+    <UserControl.Resources>
+
+        <Style x:Key="ColumnSeries1Style" TargetType="Control">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="#FF443737"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ColumnSeries2Style" TargetType="Control">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="#FF443737"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <visualizationToolkit:ResourceDictionaryCollection x:Key="MyPalette">
+            <ResourceDictionary>
+                <Style x:Key="DataPointStyle" BasedOn="{StaticResource ColumnSeries1Style}" TargetType="Control" />
+            </ResourceDictionary>
+            <ResourceDictionary>
+                <Style x:Key="DataPointStyle" BasedOn="{StaticResource ColumnSeries2Style}" TargetType="Control" />
+            </ResourceDictionary>
+        </visualizationToolkit:ResourceDictionaryCollection>
+
+        <Style TargetType="visualizationToolkit:Legend" x:Key="LegendStyle">
+            <Setter Property="Background" Value="#22252a" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontFamily" Value="Gotham Pro Light"/>
+            <Setter Property="FontSize" Value="14"/>
+
+            <Setter Property="Foreground" Value="#d3dae3"/>
+        </Style>
+        
+        <Style TargetType="Grid" x:Key="PlotStyle">
+            <Setter Property="Background" Value="#22252a" />
+        </Style>
+
+        <Style TargetType="chartingToolkit:LineDataPoint" x:Key="LineDataPoint">
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="chartingToolkit:LineDataPoint">
+                        <Grid x:Name="Root" Opacity="1">
+                            <ToolTipService.ToolTip>
+                                <StackPanel Margin="2,2,2,2">
+                                    <ContentControl Content="{TemplateBinding IndependentValue}" ContentStringFormat="M: {0}"/>
+                                    <ContentControl Content="{TemplateBinding DependentValue}" ContentStringFormat="Alpha: {0}"/>
+                                    <ContentControl Content="{Binding epoch}" ContentStringFormat="Эпоха: {0}"/>
+                                </StackPanel>
+                            </ToolTipService.ToolTip>
+                            <Ellipse StrokeThickness="{TemplateBinding BorderThickness}" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        
+    </UserControl.Resources>
+    
+    
     <Grid>
         <Border BorderBrush="#FF393F4C" BorderThickness="1" Padding="5" Margin="5">
             <Grid>
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
                 <DataGrid 
                             IsReadOnly="True"
@@ -18,6 +91,7 @@
                         HorizontalContentAlignment="Center"
                         FontSize="12"
                         MaxColumnWidth="130"
+                        Margin="0,0,0,10"
                         ColumnWidth="100"
                         HorizontalGridLinesBrush="#393f4c"
                         VerticalGridLinesBrush="#393f4c"
@@ -59,12 +133,26 @@
                     </DataGrid.Resources>
                 </DataGrid>
 
-                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="{x:Null}" />
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FF393F4C" />
 
-                <Grid 
-                        Margin="0,10,0,0"
-                        HorizontalAlignment="Left"
-                        Background="{x:Null}" Width="865" Grid.Row="2"/>
+                <Grid Background="{x:Null}" Grid.Row="2">
+                    <chartingToolkit:Chart  
+                        x:Name="lineChart"
+                        Palette="{StaticResource MyPalette}"
+                        Title="График траектории" 
+                        Margin="0,10,5,0"
+                        LegendStyle="{StaticResource LegendStyle}"
+                        PlotAreaStyle="{StaticResource PlotStyle}"
+                        BorderBrush="#FF393F4C"
+                        >
+                        <local:UnorderedLineSeries x:Name="mSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Фазовая траектория" ItemsSource="{Binding Path=mList}">
+                        </local:UnorderedLineSeries>
+                        <local:UnorderedLineSeries x:Name="mPSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория верхней границы" ItemsSource="{Binding Path=mPlusList}" />
+                        <local:UnorderedLineSeries x:Name="mMSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория нижней границы" ItemsSource="{Binding Path=mMinusList}"  />
+                    </chartingToolkit:Chart>
+                </Grid>
+
+
 
 
             </Grid>

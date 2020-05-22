@@ -15,16 +15,44 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfApp2.Calc;
 using WpfApp2.DB.Models;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace WpfApp2.UI.Components
 {
     /// <summary>
     /// Логика взаимодействия для FirstDecomposition.xaml
     /// </summary>
+    /// 
+
+        class ChartData  {
+
+            public struct ChartEntry
+        {
+            public ChartEntry(double alpha, double m, int epoch)
+            {
+                this.alpha = alpha;
+                this.m = m;
+                this.epoch = epoch;
+            }
+
+            public double alpha { get; set; }
+            public double m { get; set; }
+            public int epoch { get; set; }
+        }
+
+        public List<ChartEntry> mList { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> mPlusList { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> mMinusList { get; set; } = new List<ChartEntry>();
+        public List<ChartEntry> mPredictList { get; set; } = new List<ChartEntry>();
+
+        }
+
     public partial class FirstDecomposition : UserControl, DataChangeNotifier
     {
         ProjectData data;
         FirstDecompositionCalculator calc;
+        ChartData chartData = new ChartData();
+
 
         public FirstDecomposition(ProjectData data)
         {
@@ -32,10 +60,20 @@ namespace WpfApp2.UI.Components
             this.calc = new FirstDecompositionCalculator(this.data);
             InitializeComponent();
             initDataGrid();
+            showColumnChart();
 
         }
 
-        
+
+        private void showColumnChart()
+        {
+            lineChart.DataContext = this.chartData;
+  //          mSeries.DataPointStyle.Setters.Add(new Setter(BackgroundProperty, Brushes.Blue));
+ //           mPSeries.DataPointStyle.Setters.Add(new Setter(BackgroundProperty, Brushes.Yellow));
+  //          mMSeries.DataPointStyle.Setters.Add(new Setter(BackgroundProperty, Brushes.HotPink));
+        }
+
+
         void initDataGrid()
         {
             DataTable Data = new DataTable();
@@ -47,29 +85,34 @@ namespace WpfApp2.UI.Components
             Data.Columns.Add("M-");
             Data.Columns.Add("Alpha+");
             Data.Columns.Add("Alpha-");
-            Data.Columns.Add("Устойчивость Т");
-            Data.Columns.Add("Устойчивость П");
             Data.Columns.Add("Допуск");
 
 
             for (int index = 0; index < data.marks.Count; index++)
             { 
-                object[] values = new object[10];
+                object[] values = new object[8];
                 var item = data.marks[index];
 
-                System.Console.Out.WriteLine(calc.calculateAlpha_plus(index));
-                System.Console.Out.WriteLine(calc.calculateAlpha_minus(index));
+
+                double m = calc.calculateM(index);
+                double alpha = calc.calculateAlpha(index);
+                double mPlus = calc.calculateM_plus(index);
+                double mMinus = calc.calculateM_minus(index);
+
+                this.chartData.mList.Add(new ChartData.ChartEntry(alpha,m, item.epoch));
+                this.chartData.mPlusList.Add(new ChartData.ChartEntry(alpha, mPlus, item.epoch));
+                this.chartData.mMinusList.Add(new ChartData.ChartEntry(alpha, mMinus, item.epoch));
+                //this.chartData.mPredictList.Add(new KeyValuePair<double, double>(alpha, mMinus));
+
 
                 values[0] = item.epoch;
-                values[1] = String.Format("{0:0.######}", calc.calculateM(index));
-                values[2] = String.Format("{0:0.#########}", calc.calculateAlpha(index));
-                values[3] = String.Format("{0:0.######}", calc.calculateM_plus(index));
-                values[4] = String.Format("{0:0.######}", calc.calculateM_minus(index));
+                values[1] = String.Format("{0:0.######}", m);
+                values[2] = String.Format("{0:0.#########}", alpha);
+                values[3] = String.Format("{0:0.######}", mPlus);
+                values[4] = String.Format("{0:0.######}", mMinus);
                 values[5] = String.Format("{0:0.#########}", calc.calculateAlpha_plus(index));
                 values[6] = String.Format("{0:0.#########}", calc.calculateAlpha_minus(index));
-                values[7] = String.Format("{0:0.########}", calc.stabilityTheory(index));
-                values[8] = String.Format("{0:0.########}", calc.stabilityPractice(index));
-                values[9] = calc.hasStable(index);
+                values[7] = calc.hasStable(index);
                 
 
                 Data.Rows.Add(values);
@@ -84,6 +127,12 @@ namespace WpfApp2.UI.Components
         public void onDataChanged(EventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        private void setupChart() { 
+            
+
+
         }
 
 
