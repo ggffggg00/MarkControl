@@ -7,10 +7,56 @@
              mc:Ignorable="d" 
              Margin="-3,0,0,0"
              d:DesignHeight="538" d:DesignWidth="871" Background="#22252a">
+
+    <UserControl.Resources>
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Background" Value="#FF3D4055"/>
+            <Setter Property="Height" Value="29"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#FF8B9EB5"/>
+            <Setter Property="FontSize" Value="14"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF4B5364"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Label" x:Key="LargeLabel">
+            <Setter Property="Foreground" Value="#FFC5D3E4"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="FontFamily" Value="Gotham Pro Light"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+
+        <Style TargetType="Label" BasedOn="{StaticResource LargeLabel}" x:Key="MediumLabel">
+            <Setter Property="Foreground" Value="#FF8B9EB5"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+    </UserControl.Resources>
+
+
     <Border BorderBrush="#FF393F4C" BorderThickness="1" Padding="5" Margin="5">
         <Grid>
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="2" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
             <DataGrid 
+            Grid.Row="0"
             x:Name="dtGrid"
             Margin="5"
             HorizontalContentAlignment="Center"
@@ -22,7 +68,8 @@
             Background="{x:Null}"
             FontFamily="Gotham Pro Light"
             ItemsSource="{Binding}" 
-            BorderBrush="{x:Null}" >
+            BorderBrush="#FF393F4C"
+                BorderThickness="1">
 
                 <DataGrid.Resources>
                     <Style TargetType="{x:Type DataGrid}">
@@ -56,55 +103,52 @@
                     </Style>
                 </DataGrid.Resources>
             </DataGrid>
-            <Grid Margin="10,335,10,10">
-                <Button Content="Применить изменения" Margin="0,0,10,0" VerticalAlignment="Top" Click="Button_Click" Foreground="#FF8B9EB5" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Right" FontSize="14" Width="229" Height="29" Background="#FF3D4055">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="#FF2F343F"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#FF4B5364"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
+            <StackPanel Grid.Row="0" Name="emptyLabels">
+                <Label  Content="Кажется, здесь пусто" Style="{StaticResource LargeLabel}" />
+                <Label  Content="Импортируйте значения марок из .csv файла для дальнейшей работы" Style="{StaticResource MediumLabel}" />
+            </StackPanel>
+            
 
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FF393F4C" />
 
-                </Button>
-                <Button Content="Добавить эпоху" Margin="0,40,10,0" VerticalAlignment="Top" Click="Button_Click" Foreground="#FF8B9EB5" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Right" FontSize="14" Width="229" Height="29" Background="#FF3D4055">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="#FF2F343F"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#FF4B5364"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
+            <Border BorderBrush="#FF393F4C"  Grid.Row="2" BorderThickness="1" Padding="5" Margin="5">
+                <Grid Margin="5,0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="237"/>
+                        <ColumnDefinition Width="237"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="Данные" HorizontalAlignment="Left" Foreground="#FF8B9EB5" BorderThickness="0.5" Width="237" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Button Style="{StaticResource ResourceKey=ButtonStyle}" Content="Применить изменения"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto" />
+                            <Button Style="{StaticResource ButtonStyle}" Content="Добавить эпоху"  VerticalAlignment="Top" Margin="10,5,10,0" Width="Auto"/>
+                            <Button Style="{StaticResource ButtonStyle}" Content="Импорт значений"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto"/>
+                            <Button Style="{StaticResource ButtonStyle}" Content="Экспорт значений"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="Распределение марок" HorizontalAlignment="Right" Foreground="#FF8B9EB5" BorderThickness="0.5" Width="237" Margin="0,0,0,10">
+                        <ListView x:Name="LV" BorderThickness="0" Background="#FF22252A">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="5">
+                                        <TextBlock 
+                                            Foreground="#FFD2D9E2" 
+                                            Margin="5" 
+                                            FontSize="13" 
+                                            FontFamily="Gotham Pro Light"  
+                                            Text="{Binding}" 
+                                            HorizontalAlignment="Center"  />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </GroupBox>
+                    <GroupBox Grid.Column="2" Header="Схема объекта" BorderThickness="0.5"  Foreground="#FF8B9EB5" Margin="0,0,0,10">
+                        <Image  RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" x:Name="img" Margin="0,10"></Image>
+                    </GroupBox>
+                </Grid>
 
-
-                </Button>
-            </Grid>
-
+            </Border>
 
         </Grid>
     </Border>

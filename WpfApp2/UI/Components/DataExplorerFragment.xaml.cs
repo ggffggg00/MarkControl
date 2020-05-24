@@ -1,9 +1,13 @@
 ﻿
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
+using System.IO;
 using System.Windows.Controls;
-
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using WpfApp2.DB.Models;
 
 namespace WpfApp2.UI.Components
@@ -13,6 +17,8 @@ namespace WpfApp2.UI.Components
     {
         DatabaseHelper db;
         ProjectData data;
+
+        ObservableCollection<string> BlockList { get; set; }
 
         /// <summary>
         /// Экземпляр EventHandler для оповещения всех компонентов об изменении данных
@@ -24,7 +30,10 @@ namespace WpfApp2.UI.Components
             this.db = DB;
             this.data = prData;
             InitializeComponent();
+            initBlocksList();
             initDataGrid();
+            showImage();
+            setEmpty(true);
 
         }
 
@@ -61,6 +70,49 @@ namespace WpfApp2.UI.Components
             if (handler != null)
                 handler(this, new EventArgs());
         }
+
+        void initBlocksList() {
+
+            this.BlockList = new ObservableCollection<string>();
+
+            this.LV.DataContext = BlockList;
+            this.LV.ItemsSource = BlockList;
+
+            foreach (JObject blData in data.markInBlockOrder)
+            {
+                string res = "Блок "+(string)blData["blockName"]+": ";
+                foreach (int mark in blData["marks"])
+                    res += mark.ToString()+" ";
+
+                BlockList.Add(res);
+
+            }
+
+
+        }
+
+
+
+        void showImage() {
+
+            byte[] buffer = data.img;
+            ImageSource result;
+            using (var stream = new MemoryStream(buffer))
+            {
+                result = BitmapFrame.Create(
+                    stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+            }
+
+            img.Source = result;
+        }
+
+
+        void setEmpty(bool isEmpty) {
+            this.dtGrid.Visibility = isEmpty ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
+            this.emptyLabels.Visibility = !isEmpty ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
+        
+        }
+
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {

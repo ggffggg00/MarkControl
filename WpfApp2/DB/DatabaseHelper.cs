@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
+using System.Text;
 using WpfApp2;
 using WpfApp2.DB.Models;
 
@@ -55,7 +56,7 @@ public class DatabaseHelper
 
     private void firstInitialize()
     {
-        string query = " CREATE TABLE \"projects\" (\"id\"	INTEGER NOT NULL UNIQUE,\"name\"	TEXT NOT NULL,\"mark_count\"	INTEGER NOT NULL,\"image\"	TEXT NOT NULL,\"block_count\"	INTEGER NOT NULL, PRIMARY KEY(\"id\")); ";
+        string query = " CREATE TABLE \"projects\" (\"id\"	INTEGER NOT NULL UNIQUE,\"name\"	TEXT NOT NULL,\"mark_count\"	INTEGER NOT NULL,\"image\"	TEXT NOT NULL,\"block_count\"	INTEGER NOT NULL, \"meta\"	TEXT NOT NULL DEFAULT '{}', PRIMARY KEY(\"id\")); ";
         SQLiteCommand cmd = new SQLiteCommand(query, connection);
         cmd.ExecuteNonQuery();
     }
@@ -141,12 +142,17 @@ public class CreateProjectRequest : DatabaseHelper.DBRequest<long>
 
         //Читаем побайтово файл изображения и перегоняем в base64
         string base64image = Convert.ToBase64String(File.ReadAllBytes(data.imagePath));
+        string jsonMetaData = Convert.ToBase64String(Encoding.UTF8.GetBytes(data.metaData.ToString()));
 
-        return "INSERT INTO projects (name, mark_count, block_count, image) VALUES " +
+        var query = "INSERT INTO projects (name, mark_count, block_count, image, meta) VALUES " +
             "(\"" + data.title + "\"," +
              data.markCount + ", " +
               data.blockCount + "," +
-              " \"" + base64image + "\"); select last_insert_rowid();";
+              " \"" + base64image + "\", \"" + jsonMetaData + "\"); select last_insert_rowid();";
+
+        System.Console.Out.WriteLine(query);
+
+        return query ;
 
 
     }
@@ -202,7 +208,7 @@ public class GetProjectDataRequest : DatabaseHelper.DBRequest<ProjectData>
         this.id = id;
     }
 
-    protected override string getQueryStatement() { return "SELECT * FROM projects CROSS JOIN marks"+ id.ToString()+" WHERE id=" + id.ToString()+";"; }
+    protected override string getQueryStatement() { return "SELECT * FROM projects LEFT JOIN marks" + id.ToString()+ " ON 1=1 WHERE id=" + id.ToString()+";"; }
 
     protected override ProjectData handleRequest(SQLiteCommand command)
     {

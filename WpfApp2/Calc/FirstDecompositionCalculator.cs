@@ -19,7 +19,7 @@ namespace WpfApp2.Calc {
         {
             this.data = data;
         }
-
+         
 
         public double calculateM(int epochIndex) {
             return (M(epochIndex, 0, 1));
@@ -64,11 +64,6 @@ namespace WpfApp2.Calc {
             return stabilityTheory(epochIndex) >= stabilityPractice(epochIndex);
         }
 
-        private double round(double val)
-        {
-            return Math.Round(val, ROUND_DIGITS);
-        }
-
         public double H1xH0(int epochIndex = 0, double accuracy = 0, int dir = 1)
         {
             double result = 0;
@@ -103,14 +98,76 @@ namespace WpfApp2.Calc {
         }
 
 
+        public double calculateMPredict(int epochIndex)
+        {
+            double a = data.aAccuracy;
+            if (epochIndex == 0)
+            {
+                double avgM = averageM();
+                double m0 = calculateM(0);
+
+                return a * m0 + (1 - a) * avgM;
+
+            }
+            else if (epochIndex < data.marksCount)
+            {
+
+                double m = calculateM(epochIndex);
+                return a * m + (1 - a) * calculateMPredict(epochIndex - 1);
+
+            }
+            else if (epochIndex >= data.marksCount)
+            {
+                double avgM = averageM();
+                double m = calculateM(epochIndex);
+                return a * avgM + (1 - a) * calculateMPredict(epochIndex - 1);
+            }
+            else
+                throw new InvalidOperationException("Пытаемся посчитать то, что считать не надо");
+
+        }
+
+        public double calculateAlphaPredict(int epochIndex)
+        {
+            double a = data.aAccuracy;
+            if (epochIndex == 0)
+            {
+                double avgAlpha = averageAlpha();
+                double alpha0 = calculateAlpha(0);
+
+                return a * alpha0 + (1 - a) * avgAlpha;
+
+            }
+            else if (epochIndex < data.marksCount)
+            {
+
+                double alpha = calculateAlpha(epochIndex);
+                return a * alpha + (1 - a) * calculateAlphaPredict(epochIndex - 1);
+
+            }
+            else if (epochIndex >= data.marksCount)
+            {
+                double avgAlpha = averageAlpha();
+                double alpha = calculateAlpha(epochIndex);
+                return a * avgAlpha + (1 - a) * calculateAlphaPredict(epochIndex - 1);
+            }
+            else
+                throw new InvalidOperationException("Пытаемся посчитать то, что считать не надо");
+
+        }
+
 
         private double averageM()
         {
+            int counter = 0;
             double sum = 0;
             for (int index = 0; index < data.marks.Count; index++)
-                sum += calculateM(index);
+            {
+                 sum += calculateM(index);
+                counter++;
+            }
 
-            return sum / data.marksCount;
+            return sum / data.marks.Count;
         }
 
         private double averageAlpha()
@@ -119,7 +176,7 @@ namespace WpfApp2.Calc {
             for (int index = 0; index < data.marks.Count; index++)
                 sum += calculateAlpha(index);
 
-            return sum / data.marksCount;
+            return sum / data.marks.Count;
         }
     }
 }

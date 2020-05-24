@@ -80,6 +80,7 @@ namespace WpfApp2.UI.Components
 
             Data.Columns.Add("Эпоха");
             Data.Columns.Add("М");
+            Data.Columns.Add("М pr");
             Data.Columns.Add("Alpha");
             Data.Columns.Add("M+"); 
             Data.Columns.Add("M-");
@@ -90,7 +91,7 @@ namespace WpfApp2.UI.Components
 
             for (int index = 0; index < data.marks.Count; index++)
             { 
-                object[] values = new object[8];
+                object[] values = new object[9];
                 var item = data.marks[index];
 
 
@@ -98,23 +99,24 @@ namespace WpfApp2.UI.Components
                 double alpha = calc.calculateAlpha(index);
                 double mPlus = calc.calculateM_plus(index);
                 double mMinus = calc.calculateM_minus(index);
+                double mPredict = calc.calculateMPredict(index);
 
                 this.chartData.mList.Add(new ChartData.ChartEntry(alpha,m, item.epoch));
                 this.chartData.mPlusList.Add(new ChartData.ChartEntry(alpha, mPlus, item.epoch));
                 this.chartData.mMinusList.Add(new ChartData.ChartEntry(alpha, mMinus, item.epoch));
-                //this.chartData.mPredictList.Add(new KeyValuePair<double, double>(alpha, mMinus));
+                this.chartData.mPredictList.Add(new ChartData.ChartEntry(alpha, mPredict, item.epoch));
 
 
                 values[0] = item.epoch;
                 values[1] = String.Format("{0:0.######}", m);
-                values[2] = String.Format("{0:0.#########}", alpha);
-                values[3] = String.Format("{0:0.######}", mPlus);
-                values[4] = String.Format("{0:0.######}", mMinus);
-                values[5] = String.Format("{0:0.#########}", calc.calculateAlpha_plus(index));
-                values[6] = String.Format("{0:0.#########}", calc.calculateAlpha_minus(index));
-                values[7] = calc.hasStable(index);
+                values[2] = String.Format("{0:0.######}", mPredict);
+                values[3] = String.Format("{0:0.#########}", alpha);
+                values[4] = String.Format("{0:0.######}", mPlus);
+                values[5] = String.Format("{0:0.######}", mMinus);
+                values[6] = String.Format("{0:0.#########}", calc.calculateAlpha_plus(index));
+                values[7] = String.Format("{0:0.#########}", calc.calculateAlpha_minus(index));
+                values[8] = calc.hasStable(index);
                 
-
                 Data.Rows.Add(values);
             }
 

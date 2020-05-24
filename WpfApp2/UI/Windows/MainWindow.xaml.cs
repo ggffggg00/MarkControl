@@ -36,13 +36,15 @@ namespace WpfApp2
             this.id = projectId;
             InitializeComponent();
 
-
             var projectData = new GetProjectDataRequest(db, id).execute();
+
+            setDataUpToDate(true);
 
             DataExplorerFragment dtExp = new DataExplorerFragment(db, projectData);
             dtExp.dataChangeEvent += InvokeNotification;
-
             addTab("Обозреватель данных", dtExp);
+
+
             registerNotifierComponent("Декомпозиция 1", new FirstDecomposition(projectData));
 
         }
@@ -78,6 +80,11 @@ namespace WpfApp2
             addTab(title, content);
         }
 
+        void setDataUpToDate(bool flag) {
+            dataStateIndicator.Text = flag ? "Данные актуальны" : "Данные изменены, требуется запись в БД";
+        
+        }
+
 
         //Метод отвечает за создание вкладки с контентом
         void addTab(string title, object content) {
@@ -97,6 +104,8 @@ namespace WpfApp2
             selectionFlag = true;
 
         }
+
+
 
     }
 }

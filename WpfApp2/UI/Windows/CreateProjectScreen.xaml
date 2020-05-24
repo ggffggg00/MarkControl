@@ -4,28 +4,52 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2"
-        mc:Ignorable="d" Height="400" Width="600" ResizeMode="NoResize" Background="#FF2F343F" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderThickness="1" BorderBrush="#FFD2D9E2">
+        mc:Ignorable="d" Height="382" ResizeMode="NoResize" Background="#FF2F343F" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderThickness="1" BorderBrush="#FFD2D9E2" Width="597">
     <Grid>
         <Label Content="Создание нового проекта" Margin="20,10,0,0" Foreground="#FFD2D9E2" FontSize="16" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" HorizontalAlignment="Left" Width="230" Height="28" VerticalAlignment="Top" Padding="0,5,5,5"/>
         <Separator Height="10" Margin="0,42,0,0" VerticalAlignment="Top"/>
         <StackPanel Margin="20,60,0,0" Orientation="Vertical" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="224">
             <Label Content="Название проекта" Foreground="#FFD2D9E2" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" HorizontalAlignment="Left" Width="120" Height="23" VerticalAlignment="Top" Padding="2,5,0,5" Margin="0,0,0,5"/>
-            <TextBox x:Name="TitleField" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="224" Background="#FF414857" Foreground="#FFC9D0D9" VerticalScrollBarVisibility="Disabled" BorderThickness="0" Padding="0,2,0,0" Text="Untitled" Margin="0,0,-104,0"/>
+            <TextBox x:Name="TitleField" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="224" Background="#FF414857" Foreground="#FFC9D0D9" VerticalScrollBarVisibility="Disabled" BorderThickness="0" Padding="0,2,0,0" Text="Untitled" Margin="0,0,-104,0" TextChanged="TitleField_TextChanged"/>
         </StackPanel>
         <StackPanel Margin="20,125,0,0" Orientation="Vertical" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="224">
             <Label Content="Количество марок" Foreground="#FFD2D9E2" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" HorizontalAlignment="Left" Width="120" Height="23" VerticalAlignment="Top" Padding="2,5,0,5" Margin="0,0,0,5"/>
-            <TextBox x:Name="MarkCountField" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="224" Background="#FF414857" Foreground="#FFC9D0D9" VerticalScrollBarVisibility="Disabled" BorderThickness="0" Padding="0,2,0,0"/>
+            <TextBox x:Name="MarkCountField" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="224" Background="#FF414857" Foreground="#FFC9D0D9" VerticalScrollBarVisibility="Disabled" BorderThickness="0" Padding="0,2,0,0" TextChanged="TitleField_TextChanged"/>
         </StackPanel>
         <StackPanel Margin="20,190,0,0" Orientation="Vertical" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="224">
             <Label Content="Количество блоков" Foreground="#FFD2D9E2" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" HorizontalAlignment="Left" Width="129" Height="23" VerticalAlignment="Top" Padding="2,5,0,5" Margin="0,0,0,5"/>
-            <TextBox x:Name="BlockCountField" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="224" Background="#FF414857" Foreground="#FFC9D0D9" VerticalScrollBarVisibility="Disabled" BorderThickness="0" Padding="0,2,0,0"/>
+            <TextBox x:Name="BlockCountField" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="224" Background="#FF414857" Foreground="#FFC9D0D9" VerticalScrollBarVisibility="Disabled" BorderThickness="0" Padding="0,2,0,0" TextChanged="TitleField_TextChanged"/>
         </StackPanel>
         <StackPanel Margin="20,255,0,0" Orientation="Vertical" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="224">
             <Label Content="Изображение плана (.png)" Foreground="#FFD2D9E2" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" HorizontalAlignment="Left" Width="192" Height="23" VerticalAlignment="Top" Padding="2,5,0,5" Margin="0,0,0,5"/>
             <Button Content="Выбрать изображение" Background="#FF1E2127" Foreground="#FFB3B9C3" BorderThickness="0" Height="25" HorizontalAlignment="Left" Width="147" Click="Button_Click_1"/>
         </StackPanel>
-        <Button Content="Создать проект" Background="#FF2F343F" Foreground="#FFB3B9C3" BorderThickness="0" HorizontalAlignment="Right" Width="147" Margin="0,345,10,10" BorderBrush="{x:Null}" Click="Button_Click"/>
-        <Button Content="Отменить" Background="#FF2F343F" Foreground="#FFB3B9C3" BorderThickness="0" HorizontalAlignment="Right" Width="147" Margin="0,345,162,10" BorderBrush="{x:Null}" Click="Button_Click_2"/>
-        <Image x:Name="ImagePreview" HorizontalAlignment="Left" Height="245" Margin="264,60,0,0" VerticalAlignment="Top" Width="316"/>
+        <Button Content="Создать проект" Background="#FF2F343F" Foreground="#FFB3B9C3" BorderThickness="0" HorizontalAlignment="Right" Width="147" Margin="0,0,10,10" BorderBrush="{x:Null}" Click="Button_Click" Height="43" VerticalAlignment="Bottom"/>
+        <Button Content="Отменить" Background="#FF2F343F" Foreground="#FFB3B9C3" BorderThickness="0" HorizontalAlignment="Right" Width="147" Margin="0,0,162,10" BorderBrush="{x:Null}" Click="Button_Click_2" Height="43" VerticalAlignment="Bottom"/>
+        <Image x:Name="ImagePreview" HorizontalAlignment="Left" Height="255" Margin="264,60,0,0" VerticalAlignment="Top" Width="316"/>
+        <StackPanel x:Name="MSP" Height="249" Margin="0,60,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="187">
+            <Label Content="Распределение по блокам" Foreground="#FFD2D9E2" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" Height="23" VerticalAlignment="Top" Padding="2,5,0,5" Margin="0,5"/>
+            <ListView x:Name="LV" BorderThickness="0" Background="#FF393F4C" Height="215">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock 
+                                Foreground="#FFD2D9E2" 
+                                Margin="5" 
+                                FontSize="13" 
+                                FontFamily="Gotham Pro Light"  
+                                Text="{Binding}" 
+                                HorizontalAlignment="Center"  />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <Label  Foreground="#FF98A0AA" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" Padding="2,5,0,5" Margin="20,0,0,10" FontSize="11" HorizontalAlignment="Left" Width="266" Height="32" VerticalAlignment="Bottom" >
+            <TextBlock TextWrapping="WrapWithOverflow" FontSize="9">
+                После выбора изображения будет открыто диалоговое окно для распределения марок по блокам
+
+            </TextBlock>
+        </Label>
     </Grid>
 </Window>
