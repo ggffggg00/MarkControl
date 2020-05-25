@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,14 @@ namespace WpfApp2.UI.Components
     {
         DatabaseHelper db;
         ProjectData data;
+        bool isUpToDate = true;
 
         ObservableCollection<string> BlockList { get; set; }
 
         /// <summary>
         /// Экземпляр EventHandler для оповещения всех компонентов об изменении данных
         /// </summary>
-        public event EventHandler<EventArgs> dataChangeEvent;
+        public event EventHandler<DataChangedEventArgs> dataChangeEvent;
 
         public DataExplorerFragment(DatabaseHelper DB, ProjectData prData)
         {
@@ -69,12 +71,13 @@ namespace WpfApp2.UI.Components
             }
 
             dtGrid.DataContext = Data.DefaultView;
-                       
+            dtGrid.ItemsSource = Data.DefaultView;
+
 
 
         }
 
-        void notifyOnDataChanged() {
+        void notifyOnDataChanged(bool isWriteDb = false) {
 
             setEmpty(data.epochCount == 0);
 
@@ -82,12 +85,12 @@ namespace WpfApp2.UI.Components
                 initOrUpdateDataGrid();
 
 
-            EventHandler<EventArgs> handler = dataChangeEvent;
+            EventHandler<DataChangedEventArgs> handler = dataChangeEvent;
 
-
+            this.isUpToDate = isWriteDb;
 
             if (handler != null)
-                handler(this, new EventArgs());
+                handler(this, new DataChangedEventArgs(isUpToDate, !isWriteDb));
         }
 
         void initBlocksList() {
@@ -135,14 +138,13 @@ namespace WpfApp2.UI.Components
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            notifyOnDataChanged();
+            //notifyOnDataChanged();
         }
-
-
+        
         //Импорт значений
         private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            OpenFileDialog dlg = new OpenFileDialog();
             dlg.DefaultExt = ".csv";
             dlg.Filter = "Данные (.csv)|*.csv";
             dlg.Multiselect = false;
@@ -150,10 +152,28 @@ namespace WpfApp2.UI.Components
             Nullable<bool> result = dlg.ShowDialog();
 
             if (result == true) {
-                data.AddAllMarks(ImportExportManager.parseCsv(dlg.FileName));
+                data.AddAllMarks(ImportExportManager.parseCsv(dlg.FileName, data.epochCount));
                 notifyOnDataChanged();
             }
 
+        }
+
+        private void Button_Click_2(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Значения марок (*.csv)|*.csv";
+            saveFileDialog.CheckPathExists = true;
+            saveFileDialog.Title = "Сохранение значений марок";
+            saveFileDialog.CheckFileExists = true;
+            if (saveFileDialog.ShowDialog() == true)
+                ImportExportManager.exportCsv(data.marks, saveFileDialog.FileName);
+        }
+
+        private void Button_Click_3(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var isSaved = data.SaveAllData(db);
+            if ( isSaved )
+                notifyOnDataChanged(true);
         }
     }
 }

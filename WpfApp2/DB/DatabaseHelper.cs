@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
@@ -126,7 +127,6 @@ public class ProjectsListRequest : DatabaseHelper.DBRequest<ObservableCollection
 
 }
 
-
 public class CreateProjectRequest : DatabaseHelper.DBRequest<long>
 {
 
@@ -142,6 +142,8 @@ public class CreateProjectRequest : DatabaseHelper.DBRequest<long>
 
         //Читаем побайтово файл изображения и перегоняем в base64
         string base64image = Convert.ToBase64String(File.ReadAllBytes(data.imagePath));
+        data.metaData.Add("eAccuracy", 0.001);
+        data.metaData.Add("aAccuracy", 0.1);
         string jsonMetaData = Convert.ToBase64String(Encoding.UTF8.GetBytes(data.metaData.ToString()));
 
         var query = "INSERT INTO projects (name, mark_count, block_count, image, meta) VALUES " +
@@ -150,7 +152,7 @@ public class CreateProjectRequest : DatabaseHelper.DBRequest<long>
               data.blockCount + "," +
               " \"" + base64image + "\", \"" + jsonMetaData + "\"); select last_insert_rowid();";
 
-        System.Console.Out.WriteLine(query);
+        Console.Out.WriteLine(query);
 
         return query ;
 
@@ -219,6 +221,87 @@ public class GetProjectDataRequest : DatabaseHelper.DBRequest<ProjectData>
         reader.Close();
 
         return resp;
+    }
+
+
+
+}
+
+public class UpdateProjectDataRequest : DatabaseHelper.DBRequest<bool>
+{
+
+    ProjectData data;
+
+    public UpdateProjectDataRequest(DatabaseHelper DBHelper, ProjectData data) : base(DBHelper)
+    {
+        this.data = data;
+    }
+
+    protected override string getQueryStatement() {
+
+        var bl = new StringBuilder();
+
+        bl.Append("DELETE FROM marks").Append(data.id).Append(";");
+
+        bl.Append("INSERT INTO marks").Append(data.id).Append(" VALUES ");
+
+        for(int i = 0; i < data.epochCount; i++)
+        {
+            bl.Append("( ").Append(i).Append(", ");
+
+            foreach(double val in data.marks[i].marks.Values)
+            {
+                bl.Append("\"").Append(val.ToString().Replace(",",".")).Append("\", ");
+            }
+
+            bl.Remove(bl.Length - 2, 2);
+            bl.Append(" ),");
+
+        }
+
+        bl.Remove(bl.Length - 1, 1).Append(";");
+
+        Console.Out.WriteLine(bl.ToString());
+
+        return bl.ToString(); 
+    }
+
+    protected override bool handleRequest(SQLiteCommand command)
+    {
+
+        int affectedRows = command.ExecuteNonQuery();
+        return affectedRows != 0;
+    }
+
+}
+
+public class UpdateProjectMetaRequest : DatabaseHelper.DBRequest<bool>
+{
+
+    ProjectData data;
+
+    public UpdateProjectMetaRequest(DatabaseHelper DBHelper, ProjectData data) : base(DBHelper)
+    {
+        this.data = data;
+    }
+
+    protected override string getQueryStatement()
+    {
+
+        var bl = new StringBuilder();
+
+
+
+        bl.Append("UPDATE projects SET meta=\"");
+        bl.Append(Convert.ToBase64String(Encoding.UTF8.GetBytes(data.metaData.ToString())));
+        bl.Append("\" WHERE id = ").Append(data.id).Append("; ");
+
+        return bl.ToString();
+    }
+
+    protected override bool handleRequest(SQLiteCommand command)
+    {
+        return command.ExecuteNonQuery() == 1;
     }
 
 

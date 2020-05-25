@@ -85,7 +85,7 @@ namespace WpfApp2.DB.Models
         /// В базе данных данный объект хранится как JSON строка, зашифрованная в Base64
         /// При получении данных из БД запрос расшифровывает строку и приводит к типу JObject для возможности получения данных из него
         /// </summary>
-        private JObject metaData;
+        public JObject metaData { get; set; }
 
         //-----------------------------Статичные методы----------------------
 
@@ -124,6 +124,14 @@ namespace WpfApp2.DB.Models
 
             return inst;
 
+        }
+
+        internal bool SaveAllData(DatabaseHelper dbContext) {
+
+            bool marksSaved = new UpdateProjectDataRequest(dbContext, this).execute();
+            bool metaSaved = new UpdateProjectMetaRequest(dbContext, this).execute();
+
+            return marksSaved && metaSaved;
         }
 
         internal void AddAllMarks(List<MarksRow> ls)

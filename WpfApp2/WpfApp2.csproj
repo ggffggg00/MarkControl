@@ -114,6 +114,7 @@
     </ApplicationDefinition>
     <Compile Include="DB\DatabaseHelper.cs" />
     <Compile Include="DB\ImportExportManager.cs" />
+    <Compile Include="DB\Models\DataChangedEventArgs.cs" />
     <Compile Include="DB\Models\ProjectData.cs" />
     <Compile Include="Calc\FirstDecompositionCalculator.cs" />
     <Compile Include="UI\Components\AbstractFragment.cs" />

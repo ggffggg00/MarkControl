@@ -17,7 +17,7 @@ namespace WpfApp2.UI.Components
         /// <summary>
         /// Реализация логики при изменении данных
         /// </summary>
-        void onDataChanged(EventArgs e);
+        void onDataChanged(DataChangedEventArgs e);
 
     }
 }

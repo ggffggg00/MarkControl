@@ -40,7 +40,15 @@ namespace WpfApp2.UI.Components
             public int epoch { get; set; }
         }
 
-        public List<ChartEntry> mList { get; set; } = new List<ChartEntry>();
+        public ChartData()
+        {
+            this.mList = new List<ChartEntry>();
+            this.mPlusList = new List<ChartEntry>();
+            this.mMinusList = new List<ChartEntry>();
+            this.mPredictList = new List<ChartEntry>();
+        }
+
+        public List<ChartEntry> mList { get; set; }
         public List<ChartEntry> mPlusList { get; set; } = new List<ChartEntry>();
         public List<ChartEntry> mMinusList { get; set; } = new List<ChartEntry>();
         public List<ChartEntry> mPredictList { get; set; } = new List<ChartEntry>();
@@ -51,31 +59,39 @@ namespace WpfApp2.UI.Components
     {
         ProjectData data;
         FirstDecompositionCalculator calc;
-        ChartData chartData = new ChartData();
+        ChartData chartData;
 
 
         public FirstDecomposition(ProjectData data)
         {
             this.data = data;
             this.calc = new FirstDecompositionCalculator(this.data);
+
             InitializeComponent();
-            initDataGrid();
-            showColumnChart();
+
+            showOrUpdateChart();
+            buildTable();
+            
 
         }
 
 
-        private void showColumnChart()
+        private void showOrUpdateChart()
         {
+            lineChart.DataContext = null;
+            this.chartData = new ChartData();
             lineChart.DataContext = this.chartData;
-  //          mSeries.DataPointStyle.Setters.Add(new Setter(BackgroundProperty, Brushes.Blue));
- //           mPSeries.DataPointStyle.Setters.Add(new Setter(BackgroundProperty, Brushes.Yellow));
-  //          mMSeries.DataPointStyle.Setters.Add(new Setter(BackgroundProperty, Brushes.HotPink));
         }
 
 
-        void initDataGrid()
+        void buildTable()
         {
+            if(dtGrid.DataContext == null)
+            {
+                dtGrid.DataContext = null;
+                dtGrid.ItemsSource = null;
+            }
+
             DataTable Data = new DataTable();
 
             Data.Columns.Add("Эпоха");
@@ -121,22 +137,17 @@ namespace WpfApp2.UI.Components
             }
 
             dtGrid.DataContext = Data.DefaultView;
+            dtGrid.ItemsSource = Data.DefaultView;
         }
 
         /// <summary>
         /// Метод реализует логику работы при изменении данных проекта
         /// </summary>
-        public void onDataChanged(EventArgs e)
+        public void onDataChanged(DataChangedEventArgs e)
         {
-            //throw new NotImplementedException();
+            showOrUpdateChart();
+            buildTable();
         }
-
-        private void setupChart() { 
-            
-
-
-        }
-
 
     }
 }

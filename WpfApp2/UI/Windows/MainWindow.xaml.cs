@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfApp2.DB.Models;
 using WpfApp2.UI.Components;
 
 namespace WpfApp2
@@ -20,9 +21,11 @@ namespace WpfApp2
     {
 
         DatabaseHelper db;
-        int id;
         List<DataChangeNotifier> notifiersList = new List<DataChangeNotifier>();
         bool selectionFlag = false;
+        ProjectData projectData;
+
+        bool isComponentsRegistered = false;
         
         /// <summary>
         /// Главное окно программы. Реализовывает нотификацию дочерних компонентов
@@ -33,10 +36,9 @@ namespace WpfApp2
         public MainWindow(DatabaseHelper db, int projectId)
         {
             this.db = db;
-            this.id = projectId;
             InitializeComponent();
 
-            var projectData = new GetProjectDataRequest(db, id).execute();
+            projectData = new GetProjectDataRequest(db, projectId).execute();
 
             setDataUpToDate(true);
 
@@ -44,9 +46,18 @@ namespace WpfApp2
             dtExp.dataChangeEvent += InvokeNotification;
             addTab("Обозреватель данных", dtExp);
 
+            if (projectData.epochCount != 0)
+                registerAllComponents();
 
-            registerNotifierComponent("Декомпозиция 1", new FirstDecomposition(projectData));
+        }
 
+
+        void registerAllComponents() {
+            if (isComponentsRegistered)
+                return;
+
+
+            registerNotifierComponent("Декомпозиция 1 ур.", new FirstDecomposition(projectData));
         }
 
         /// <summary>
@@ -54,11 +65,21 @@ namespace WpfApp2
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void InvokeNotification(object sender, EventArgs e)
+        private void InvokeNotification(object sender, DataChangedEventArgs e)
         {
+            
+
+            setDataUpToDate(e.isUpToDate);
+            setEpoch();
+
+            if( e.needToNotifyFragments )
             //Перебираем список всех подписчиков события и уведомляем
-            foreach (DataChangeNotifier notifier in notifiersList)
-                notifier.onDataChanged(e);
+                foreach (DataChangeNotifier notifier in notifiersList)
+                    notifier.onDataChanged(e);
+
+            if (projectData.epochCount != 0)
+                registerAllComponents();
+
         }
 
 
@@ -80,9 +101,13 @@ namespace WpfApp2
             addTab(title, content);
         }
 
+        void setEpoch() {
+            epochIndicator.Text = "Количество эпох: "+projectData.epochCount.ToString();
+        }
+
         void setDataUpToDate(bool flag) {
             dataStateIndicator.Text = flag ? "Данные актуальны" : "Данные изменены, требуется запись в БД";
-        
+            dataStateIndicator.Background = flag ? Brushes.Green : Brushes.Red;
         }
 
 
@@ -93,7 +118,7 @@ namespace WpfApp2
             item.Header = title;
             item.Content = content;
             item.Height = 50;
-            item.Foreground = (Brush)(new System.Windows.Media.BrushConverter().ConvertFromString("#d3dae3"));
+            item.Foreground = (Brush)(new BrushConverter().ConvertFromString("#d3dae3"));
             item.FontFamily = new FontFamily("Gotham Pro Light");
             item.FontSize = 14;
             item.MinWidth = 200;

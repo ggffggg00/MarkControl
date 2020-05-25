@@ -145,7 +145,7 @@
                         PlotAreaStyle="{StaticResource PlotStyle}"
                         BorderBrush="#FF393F4C"
                         >
-                        <local:UnorderedLineSeries x:Name="mSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Фазовая траектория" ItemsSource="{Binding Path=mList}"/>
+                        <local:UnorderedLineSeries Visibility="Hidden" x:Name="mSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Фазовая траектория" ItemsSource="{Binding Path=mList}"/>
                         <local:UnorderedLineSeries x:Name="mPSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория верхней границы" ItemsSource="{Binding Path=mPlusList}" />
                         <local:UnorderedLineSeries x:Name="mMSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория нижней границы" ItemsSource="{Binding Path=mMinusList}"  />
                         <local:UnorderedLineSeries x:Name="mPredictSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория нижней границы" ItemsSource="{Binding Path=mPredictList}"  />

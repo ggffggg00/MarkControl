@@ -47,11 +47,11 @@
 
         <DockPanel Height="23" VerticalAlignment="Bottom" Grid.Row="1" Background="#FF22252A">
             <StatusBar DockPanel.Dock="Bottom" Background="#FF22252A" Foreground="#FFD3DAE3">
-                <StatusBarItem>
-                    <TextBlock Name="dataStateIndicator" />
+                <StatusBarItem Padding="0">
+                    <TextBlock Name="dataStateIndicator" Padding="10,0" Height="23" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </StatusBarItem>
                 <StatusBarItem>
-                    <TextBlock Name="epochIndicator" Text="Количество эпох: 0"/>
+                    <TextBlock Name="epochIndicator" Text="Количество эпох: 0" Padding="10,0"/>
                 </StatusBarItem>
             </StatusBar>
         </DockPanel>
