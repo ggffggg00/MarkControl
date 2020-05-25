@@ -128,7 +128,7 @@ namespace WpfApp2.UI.Components
         /// </summary>
         public void onDataChanged(EventArgs e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void setupChart() { 

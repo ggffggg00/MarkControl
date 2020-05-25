@@ -122,7 +122,7 @@
                         <StackPanel>
                             <Button Style="{StaticResource ResourceKey=ButtonStyle}" Content="Применить изменения"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto" />
                             <Button Style="{StaticResource ButtonStyle}" Content="Добавить эпоху"  VerticalAlignment="Top" Margin="10,5,10,0" Width="Auto"/>
-                            <Button Style="{StaticResource ButtonStyle}" Content="Импорт значений"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto"/>
+                            <Button Style="{StaticResource ButtonStyle}" Content="Импорт значений"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto" Click="Button_Click_1"/>
                             <Button Style="{StaticResource ButtonStyle}" Content="Экспорт значений"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto"/>
                         </StackPanel>
                     </GroupBox>

@@ -68,7 +68,9 @@ namespace WpfApp2.DB.Models
         /// <summary>
         /// Количество эпох в базе данных
         /// </summary>
-        public int epochCount { get; set; } = 0;
+        public int epochCount {
+            get => this.marks.Count; 
+        }
 
         /// <summary>
         /// Хрнаилище меток. Представляет собой список объектов MarksRow. Размер списка соответствует количеству эпох
@@ -117,7 +119,6 @@ namespace WpfApp2.DB.Models
                 if (rd.IsDBNull(6))
                     break;
 
-                inst.epochCount++;
                 inst.marks.Add(MarksRow.create(rd, inst.marksCount));
             }
 
@@ -125,32 +126,42 @@ namespace WpfApp2.DB.Models
 
         }
 
-        
-
-
+        internal void AddAllMarks(List<MarksRow> ls)
+        {
+            this.marks.AddRange(ls);
+        }
     }
 
 
     /// <summary>
     /// Модель хранения данных марок для одной эпохи
     /// </summary>
-    public struct MarksRow
+    public class MarksRow
     {
-        public int epoch { get; set; }
-        public Dictionary<int, double> marks { get; set; }
+        public int epoch { get;  }
+        public Dictionary<int, double> marks { get; } = new Dictionary<int, double>();
+
+        public MarksRow(int epoch = 0)
+        {
+            this.epoch = epoch;
+        }
+
+
+        public void addMark(int markIndex, double value) {
+            marks.Add(markIndex, value);
+        }
 
         public static MarksRow create(SQLiteDataReader rd, int marksCount)
         {
-            var inst = new MarksRow();
-            inst.marks = new Dictionary<int, double>();
+
+            int index = rd.GetOrdinal("epoch");
+            var inst = new MarksRow(rd.GetInt32(index));
 
             for (int i = 1; i <= marksCount; i++){
                 int ind = rd.GetOrdinal(i.ToString());
                 inst.marks.Add(i, rd.GetDouble(ind));
             }
 
-            int index = rd.GetOrdinal("epoch");
-            inst.epoch = rd.GetInt32(index);
 
             return inst;
         }

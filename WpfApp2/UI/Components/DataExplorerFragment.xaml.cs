@@ -8,6 +8,7 @@ using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using WpfApp2.DB;
 using WpfApp2.DB.Models;
 
 namespace WpfApp2.UI.Components
@@ -31,14 +32,22 @@ namespace WpfApp2.UI.Components
             this.data = prData;
             InitializeComponent();
             initBlocksList();
-            initDataGrid();
             showImage();
-            setEmpty(true);
+            setEmpty(data.epochCount == 0);
+
+            if (data.epochCount != 0)
+                initOrUpdateDataGrid();
 
         }
 
-        void initDataGrid()
+        void initOrUpdateDataGrid()
         {
+
+            if (dtGrid.DataContext != null)
+            {
+                dtGrid.DataContext = null;
+                dtGrid.ItemsSource = null;
+            }
 
             DataTable Data = new DataTable();
             Data.Columns.Add("Эпоха");
@@ -66,7 +75,17 @@ namespace WpfApp2.UI.Components
         }
 
         void notifyOnDataChanged() {
+
+            setEmpty(data.epochCount == 0);
+
+            if (data.epochCount != 0)
+                initOrUpdateDataGrid();
+
+
             EventHandler<EventArgs> handler = dataChangeEvent;
+
+
+
             if (handler != null)
                 handler(this, new EventArgs());
         }
@@ -117,6 +136,24 @@ namespace WpfApp2.UI.Components
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             notifyOnDataChanged();
+        }
+
+
+        //Импорт значений
+        private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".csv";
+            dlg.Filter = "Данные (.csv)|*.csv";
+            dlg.Multiselect = false;
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == true) {
+                data.AddAllMarks(ImportExportManager.parseCsv(dlg.FileName));
+                notifyOnDataChanged();
+            }
+
         }
     }
 }
