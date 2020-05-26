@@ -14,10 +14,17 @@ namespace WpfApp2.Calc {
         const int ROUND_DIGITS = 5;
 
         ProjectData data;
+        int[] marksToCalculate;
 
-        public FirstDecompositionCalculator(ProjectData data)
+        public FirstDecompositionCalculator(ProjectData data, int[] marksToCalculate = null)
         {
             this.data = data;
+
+            if (marksToCalculate == null)
+                this.marksToCalculate = data.marks[0].marks.Keys.ToArray();
+            else
+                this.marksToCalculate = marksToCalculate;
+
         }
          
 
@@ -67,11 +74,14 @@ namespace WpfApp2.Calc {
         public double H1xH0(int epochIndex = 0, double accuracy = 0, int dir = 1)
         {
             double result = 0;
-            foreach(KeyValuePair<int, double> startMark in data.marks[0].marks)
+
+            foreach(int markIndex in marksToCalculate)
             {
-                double targetValue = data.marks[epochIndex].marks[startMark.Key];
-                result += (startMark.Value + accuracy * dir) * (targetValue + accuracy * dir);
+                double zeroVal = data.marks[0].marks[markIndex];
+                double epochVal = data.marks[epochIndex].marks[markIndex];
+                result += (zeroVal + accuracy * dir) * (epochVal + accuracy * dir);
             }
+
             return result;
         }
 
@@ -86,8 +96,13 @@ namespace WpfApp2.Calc {
         private double M(int epochIndex, double accuracy = 0, int direction = 1)
         {
             double result = 0;
-            foreach (KeyValuePair<int, double> startMark in data.marks[epochIndex].marks)
-                result += (startMark.Value + (accuracy * direction)) * (startMark.Value + (accuracy * direction));
+
+            foreach (int markIndex in marksToCalculate)
+            {
+                double epochVal = data.marks[epochIndex].marks[markIndex];
+                result += (epochVal + (accuracy * direction)) * (epochVal + (accuracy * direction));
+            }
+
             return Math.Sqrt(result);
         }
 

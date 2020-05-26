@@ -61,11 +61,13 @@ namespace WpfApp2.UI.Components
         FirstDecompositionCalculator calc;
         ChartData chartData;
 
+        int[] marksToCalculate;
 
-        public FirstDecomposition(ProjectData data)
+        public FirstDecomposition(ProjectData data, int[] marksToCalculate = null)
         {
             this.data = data;
-            this.calc = new FirstDecompositionCalculator(this.data);
+            this.marksToCalculate = marksToCalculate;
+            this.calc = new FirstDecompositionCalculator(this.data, marksToCalculate);
 
             InitializeComponent();
 
@@ -75,14 +77,12 @@ namespace WpfApp2.UI.Components
 
         }
 
-
         private void showOrUpdateChart()
         {
             lineChart.DataContext = null;
             this.chartData = new ChartData();
             lineChart.DataContext = this.chartData;
         }
-
 
         void buildTable()
         {

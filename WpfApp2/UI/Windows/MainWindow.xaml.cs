@@ -56,8 +56,9 @@ namespace WpfApp2
             if (isComponentsRegistered)
                 return;
 
-
             registerNotifierComponent("Декомпозиция 1 ур.", new FirstDecomposition(projectData));
+
+            isComponentsRegistered = true;
         }
 
         /// <summary>
