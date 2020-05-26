@@ -5,8 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp2.UI.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             Margin="-3,0,0,0"
+             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a">
     <Grid>
-            
+        <ComboBox x:Name="cmbb" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged"/>
+        <ContentControl x:Name="cc" Content="ContentControl" Margin="3,37,0,0"/>
+
     </Grid>
 </UserControl>
