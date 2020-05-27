@@ -5,11 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp2.UI.Components"
              xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
-             xmlns:Primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
-             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+    xmlns:winformchart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
              mc:Ignorable="d" 
              Margin="-3,0,0,0"
-             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a">
+             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a" Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
 
@@ -51,26 +52,7 @@
             <Setter Property="Background" Value="#22252a" />
         </Style>
 
-        <Style TargetType="chartingToolkit:LineDataPoint" x:Key="LineDataPoint">
-
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="chartingToolkit:LineDataPoint">
-                        <Grid x:Name="Root" Opacity="1">
-                            <ToolTipService.ToolTip>
-                                <StackPanel Margin="2,2,2,2">
-                                    <ContentControl Content="{TemplateBinding IndependentValue}" ContentStringFormat="M: {0}"/>
-                                    <ContentControl Content="{TemplateBinding DependentValue}" ContentStringFormat="Alpha: {0}"/>
-                                    <ContentControl Content="{Binding epoch}" ContentStringFormat="Эпоха: {0}"/>
-                                </StackPanel>
-                            </ToolTipService.ToolTip>
-                            <Ellipse StrokeThickness="{TemplateBinding BorderThickness}" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
+       
 
     </UserControl.Resources>
 
@@ -141,31 +123,35 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="240"/>
                     </Grid.ColumnDefinitions>
 
-                    <chartingToolkit:Chart  
-                        Grid.Column="0"
-                        x:Name="lineChart"
-                        Palette="{StaticResource MyPalette}"
-                        Title="График траектории" 
-                        Margin="0,10,10,0"
-                        LegendStyle="{StaticResource LegendStyle}"
-                        PlotAreaStyle="{StaticResource PlotStyle}"
-                        BorderBrush="#FF393F4C"
-                        >
-                        <local:UnorderedLineSeries x:Name="mSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Фазовая траектория" ItemsSource="{Binding Path=mList}"/>
-                        <local:UnorderedLineSeries x:Name="mPSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория верхней границы" ItemsSource="{Binding Path=mPlusList}" />
-                        <local:UnorderedLineSeries x:Name="mMSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория нижней границы" ItemsSource="{Binding Path=mMinusList}"  />
-                    </chartingToolkit:Chart>
 
-                    <StackPanel
-                        Grid.Column="1" Margin="10">
+
+                    <WindowsFormsHost x:Name="host" Background="#22252A">
+                        <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" BackColor="#22252A">
+                            <winformchart:Chart.ChartAreas>
+                                <winformchart:ChartArea BackColor="#22252A" Name="График"/>
+                            </winformchart:Chart.ChartAreas>
+                            <winformchart:Chart.Legends>
+                                <winformchart:Legend BackColor="#22252A" ForeColor="#B9B9B9" LegendStyle="Row" Name="legend1" Docking="Bottom"/>
+                            </winformchart:Chart.Legends>
+
+                        </winformchart:Chart>
+                    </WindowsFormsHost>
+
+
+
+                    <Grid Grid.Column="1" Margin="10">
+                     <StackPanel Margin="0">
                         <CheckBox x:Name="mCheckbox" Content="Фактическое значение (М)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
                         <CheckBox x:Name="mPCheckbox" Content="Верхняя граница (M+)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
                         <CheckBox x:Name="mMCheckbox" Content="Нижняя граница (M-)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
-
-                    </StackPanel>
+                        
+                        
+                    </StackPanel>   
+                    </Grid>
+                    
                 </Grid>
 
 

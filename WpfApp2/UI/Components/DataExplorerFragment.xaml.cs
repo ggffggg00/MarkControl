@@ -40,8 +40,6 @@ namespace WpfApp2.UI.Components
             showImage();
             setEmpty(data.epochCount == 0);
 
-            LV.Items.Add(12);
-
             if (data.epochCount != 0)
                 initOrUpdateDataGrid();
 
