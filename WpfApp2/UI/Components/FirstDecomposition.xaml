@@ -12,15 +12,32 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
              Margin="-3,0,0,0"
              d:DesignHeight="538" d:DesignWidth="871" Background="#22252a" Loaded="UserControl_Loaded">
 
+
     <UserControl.Resources>
 
-        <Style x:Key="ColumnSeries1Style" TargetType="Control">
-            <Setter Property="Background">
+
+
+        <Style x:Key="MyItemContainerStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <Style x:Key="ColHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Template">
                 <Setter.Value>
-                    <SolidColorBrush Color="#FF443737"/>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <Border  BorderThickness="0,0,0,1" BorderBrush="Black" Background="Transparent">
+                            <TextBlock Background="#42416b" Foreground="#d3dae3" FontFamily="Gotham Pro Light" FontSize="14" x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5" Width="{TemplateBinding Width}" TextAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
 
         <Style x:Key="ColumnSeries2Style" TargetType="Control">
             <Setter Property="Background">
@@ -30,14 +47,12 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
             </Setter>
         </Style>
 
-        <visualizationToolkit:ResourceDictionaryCollection x:Key="MyPalette">
-            <ResourceDictionary>
-                <Style x:Key="DataPointStyle" BasedOn="{StaticResource ColumnSeries1Style}" TargetType="Control" />
-            </ResourceDictionary>
-            <ResourceDictionary>
-                <Style x:Key="DataPointStyle" BasedOn="{StaticResource ColumnSeries2Style}" TargetType="Control" />
-            </ResourceDictionary>
-        </visualizationToolkit:ResourceDictionaryCollection>
+        <ControlTemplate x:Key="StronglyRecommended" TargetType='{x:Type ListViewItem}'>
+            <StackPanel Background="Beige">
+                <GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{TemplateBinding GridView.ColumnCollection}"/>
+                <TextBlock Background="Black" Text="Strongly Recommended" />
+            </StackPanel>
+        </ControlTemplate>
 
         <Style TargetType="visualizationToolkit:Legend" x:Key="LegendStyle">
             <Setter Property="Background" Value="#22252a" />
@@ -48,11 +63,14 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
             <Setter Property="Foreground" Value="#d3dae3"/>
         </Style>
 
+
+
+
         <Style TargetType="Grid" x:Key="PlotStyle">
             <Setter Property="Background" Value="#22252a" />
         </Style>
 
-       
+
 
     </UserControl.Resources>
 
@@ -63,98 +81,115 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="2" />
+                    <RowDefinition Height="12" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <DataGrid 
-                            IsReadOnly="True"
-                        x:Name="dtGrid"
-                        HorizontalContentAlignment="Center"
-                        FontSize="12"
-                        MaxColumnWidth="130"
-                        Margin="0,0,0,10"
-                        ColumnWidth="100"
-                        HorizontalGridLinesBrush="#393f4c"
-                        VerticalGridLinesBrush="#393f4c"
-                        GridLinesVisibility="All"
-                        Background="{x:Null}"
-                    
-                        FontFamily="Gotham Pro Light"
-                        ItemsSource="{Binding}" BorderBrush="{x:Null}" >
-
-                    <DataGrid.Resources>
-                        <Style TargetType="{x:Type DataGrid}">
-                            <Setter Property="Background" Value="#22252a"/>
-                        </Style>
-                        <Style TargetType="{x:Type DataGridRow}">
-                            <Setter Property="Background" Value="#2f343f"/>
-                            <Setter Property="FontSize" Value="14"/>
-                            <Setter Property="Foreground" Value="#9ba1a8"/>
-                        </Style>
-                        <Style TargetType="{x:Type DataGridRowHeader}">
-                            <Setter Property="Background" Value="#41416a"/>
-                        </Style>
-                        <Style TargetType="{x:Type DataGridCell}">
-                            <Setter Property="Padding" Value="10"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#19374f" />
-                                    <Setter Property="Foreground" Value="White" />
-                                    <Setter Property="BorderThickness" Value="0" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="Background" Value="#41416a"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="Padding" Value="5,5,5,5"/>
-                            <Setter Property="FontSize" Value="15"/>
-                            <Setter Property="Foreground" Value="#d3dae3"/>
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        </Style>
-                    </DataGrid.Resources>
-                </DataGrid>
-
-                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FF393F4C" />
-
-                <Grid Background="{x:Null}" Grid.Row="2">
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="240"/>
-                    </Grid.ColumnDefinitions>
+                <Border BorderBrush="#FF393F4C" BorderThickness="1" Padding="5"  Grid.Row="0">
 
 
+                    <ListView Background="#22252a" BorderThickness="0"  x:Name="dtGrid">
 
-                    <WindowsFormsHost x:Name="host" Background="#22252A">
-                        <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" BackColor="#22252A">
-                            <winformchart:Chart.ChartAreas>
-                                <winformchart:ChartArea BackColor="#22252A" Name="График"/>
-                            </winformchart:Chart.ChartAreas>
-                            <winformchart:Chart.Legends>
-                                <winformchart:Legend BackColor="#22252A" ForeColor="#B9B9B9" LegendStyle="Row" Name="legend1" Docking="Bottom"/>
-                            </winformchart:Chart.Legends>
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="Margin" Value="0,-2,0,0"/>
+                                <Setter Property="Foreground" Value="#979da4"/>
+                                <Setter Property="Focusable" Value="false"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <Border Padding="{TemplateBinding Padding}"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            SnapsToDevicePixels="true">
+                                                <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
 
-                        </winformchart:Chart>
-                    </WindowsFormsHost>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Foreground" Value="White" />
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding stability}" Value="False">
+                                        <Setter Property="Background"  Value="#4d0005" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding stability}" Value="True">
+                                        <Setter Property="Background"  Value="#2f343f" />
+                                    </DataTrigger>
+
+                                </Style.Triggers>
+
+                            </Style>
+
+                        </ListView.Resources>
+
+                        <ListView.View>
+                            <GridView ColumnHeaderContainerStyle="{StaticResource ColHeaderStyle}">
+                                <GridViewColumn  Header="Эпоха" DisplayMemberBinding="{Binding Path=epoch}"/>
+                                <GridViewColumn  Header="M" DisplayMemberBinding="{Binding m, StringFormat=0.######}"/>
+                                <GridViewColumn  Header="M pr" DisplayMemberBinding="{Binding mPredict, StringFormat=0.######}"/>
+                                <GridViewColumn  Header="Alpha" DisplayMemberBinding="{Binding alpha, StringFormat=0.######}"/>
+                                <GridViewColumn  Header="M+" DisplayMemberBinding="{Binding mPlus, StringFormat=0.######}"/>
+                                <GridViewColumn  Header="M-" DisplayMemberBinding="{Binding mMinus, StringFormat=0.######}"/>
+                                <GridViewColumn  Header="Alpha+" DisplayMemberBinding="{Binding alphaPlus, StringFormat=0.######}"/>
+                                <GridViewColumn  Header="Alpha-" DisplayMemberBinding="{Binding alphaMinus, StringFormat=0.######}"/>
+                                <GridViewColumn  Header="Устойчивость" DisplayMemberBinding="{Binding stability}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Border>
 
 
 
-                    <Grid Grid.Column="1" Margin="10">
-                     <StackPanel Margin="0">
-                        <CheckBox x:Name="mCheckbox" Content="Фактическое значение (М)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
-                        <CheckBox x:Name="mPCheckbox" Content="Верхняя граница (M+)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
-                        <CheckBox x:Name="mMCheckbox" Content="Нижняя граница (M-)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
-                        
-                        
-                    </StackPanel>   
+                <GridSplitter Margin="0,5" Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FF393F4C" />
+
+                <Border BorderBrush="#FF393F4C" BorderThickness="1" Padding="5"  Grid.Row="2">
+
+                    <Grid Background="{x:Null}">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="230"/>
+                        </Grid.ColumnDefinitions>
+
+
+
+                        <WindowsFormsHost x:Name="host" Background="#22252A">
+                            <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" BackColor="#22252A">
+                                <winformchart:Chart.ChartAreas>
+                                    <winformchart:ChartArea BackColor="#22252A" Name="График"/>
+                                </winformchart:Chart.ChartAreas>
+                                <winformchart:Chart.Legends>
+                                    <winformchart:Legend BackColor="#22252A" ForeColor="#B9B9B9" LegendStyle="Row" Name="legend1" Docking="Bottom"/>
+                                </winformchart:Chart.Legends>
+
+                            </winformchart:Chart>
+                        </WindowsFormsHost>
+
+
+
+                        <Grid Grid.Column="1" Margin="10">
+                            <StackPanel Margin="0">
+                                <CheckBox x:Name="mCheckbox" Content="Фазовая траектория" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
+                                <CheckBox x:Name="mPCheckbox" Content="Верхний предел" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
+                                <CheckBox x:Name="mMCheckbox" Content="Нижний предел" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
+                                <CheckBox x:Name="mPredictCheckbox" Content="Прогнозная траектория" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
+
+
+                            </StackPanel>
+                        </Grid>
+
                     </Grid>
-                    
-                </Grid>
 
 
+                </Border>
 
 
             </Grid>

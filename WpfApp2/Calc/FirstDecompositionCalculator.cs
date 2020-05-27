@@ -128,17 +128,16 @@ namespace WpfApp2.Calc {
                 return a * m0 + (1 - a) * avgM;
 
             }
-            else if (epochIndex < data.marksCount)
+            else if (epochIndex < data.epochCount)
             {
 
                 double m = calculateM(epochIndex);
                 return a * m + (1 - a) * calculateMPredict(epochIndex - 1);
 
             }
-            else if (epochIndex >= data.marksCount)
+            else if (epochIndex >= data.epochCount)
             {
                 double avgM = averageM();
-                double m = calculateM(epochIndex);
                 return a * avgM + (1 - a) * calculateMPredict(epochIndex - 1);
             }
             else

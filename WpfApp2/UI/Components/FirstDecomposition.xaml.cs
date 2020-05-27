@@ -17,6 +17,31 @@ namespace WpfApp2.UI.Components
     /// 
        
 
+        struct TableRow  {
+        public int epoch { get; }
+        public double m{ get; }
+        public double alpha{ get; }
+        public double mPlus{ get; }
+        public double mMinus{ get; }
+        public double mPredict{ get; }
+        public double alphaPlus{ get; }
+        public double alphaMinus{ get; }
+        public bool stability{ get; }
+
+        public TableRow(int epoch, double m, double alpha, double mPlus, double mMinus, double mPredict, double alphaPlus, double alphaMinus, bool stability)
+        {
+            this.epoch = epoch;
+            this.m = m;
+            this.alpha = alpha;
+            this.mPlus = mPlus;
+            this.mMinus = mMinus;
+            this.mPredict = mPredict;
+            this.alphaPlus = alphaPlus;
+            this.alphaMinus = alphaMinus;
+            this.stability = stability;
+        }
+    }
+
 
     public partial class FirstDecomposition : System.Windows.Controls.UserControl, DataChangeNotifier
     {
@@ -30,10 +55,7 @@ namespace WpfApp2.UI.Components
             this.calc = new FirstDecompositionCalculator(this.data, marksToCalculate);
 
             InitializeComponent();
-
-
             showOrUpdateChart();
-
             //showOrUpdateChart();
             buildTable();
 
@@ -124,52 +146,40 @@ namespace WpfApp2.UI.Components
         
         void buildTable()
         {
-            if(dtGrid.DataContext == null)
-            {
-                dtGrid.DataContext = null;
-                dtGrid.ItemsSource = null;
-            }
-
-            DataTable Data = new DataTable();
-
-            Data.Columns.Add("Эпоха");
-            Data.Columns.Add("М");
-            Data.Columns.Add("М pr");
-            Data.Columns.Add("Alpha");
-            Data.Columns.Add("M+"); 
-            Data.Columns.Add("M-");
-            Data.Columns.Add("Alpha+");
-            Data.Columns.Add("Alpha-");
-            Data.Columns.Add("Допуск");
-
+            dtGrid.Items.Clear();
 
             for (int index = 0; index < data.marks.Count; index++)
-            { 
-                object[] values = new object[9];
-                var item = data.marks[index];
+            {
 
-
-                double m = calc.calculateM(index);
-                double alpha = calc.calculateAlpha(index);
-                double mPlus = calc.calculateM_plus(index);
-                double mMinus = calc.calculateM_minus(index);
-                double mPredict = calc.calculateMPredict(index);
-
-                values[0] = item.epoch;
-                values[1] = String.Format("{0:0.######}", m);
-                values[2] = String.Format("{0:0.######}", mPredict);
-                values[3] = String.Format("{0:0.#########}", alpha);
-                values[4] = String.Format("{0:0.######}", mPlus);
-                values[5] = String.Format("{0:0.######}", mMinus);
-                values[6] = String.Format("{0:0.#########}", calc.calculateAlpha_plus(index));
-                values[7] = String.Format("{0:0.#########}", calc.calculateAlpha_minus(index));
-                values[8] = calc.hasStable(index);
                 
-                Data.Rows.Add(values);
+                var item = data.marks[index];
+                TableRow row = new TableRow(
+                    item.epoch,
+                    calc.calculateM(index),
+                    calc.calculateAlpha(index),
+                    calc.calculateM_plus(index),
+                    calc.calculateM_minus(index),
+                    calc.calculateMPredict(index),
+                    calc.calculateAlpha_plus(index),
+                    calc.calculateAlpha_minus(index),
+                    calc.hasStable(index)
+                    );
+                dtGrid.Items.Add(row);
+
             }
 
-            dtGrid.DataContext = Data.DefaultView;
-            dtGrid.ItemsSource = Data.DefaultView;
+            dtGrid.Items.Add(new TableRow(
+                    data.epochCount,
+                    0,
+                    0,
+                    0,
+                    0,
+                    calc.calculateMPredict(data.epochCount),
+                    0,
+                    0,
+                    true
+                    ));
+
         }
 
         /// <summary>
@@ -187,7 +197,7 @@ namespace WpfApp2.UI.Components
             chart.Series[0].Enabled = (bool)mCheckbox.IsChecked;
             chart.Series[1].Enabled = (bool)mPCheckbox.IsChecked;
             chart.Series[2].Enabled = (bool)mMCheckbox.IsChecked;
-            chart.Series[3].Enabled = (bool)mMCheckbox.IsChecked;
+            chart.Series[3].Enabled = (bool)mPredictCheckbox.IsChecked;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

@@ -43,6 +43,9 @@ namespace WpfApp2.UI.Components
             if (data.epochCount != 0)
                 initOrUpdateDataGrid();
 
+            eac.Text = String.Format("{0:0.#########}", data.eAccuracy);
+            acoef.Text = String.Format("{0:0.#########}", data.eAccuracy);
+
         }
 
         void initOrUpdateDataGrid()
