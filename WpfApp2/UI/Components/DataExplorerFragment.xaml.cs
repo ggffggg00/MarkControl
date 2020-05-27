@@ -5,8 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WpfApp2.DB;
@@ -36,6 +39,8 @@ namespace WpfApp2.UI.Components
             initBlocksList();
             showImage();
             setEmpty(data.epochCount == 0);
+
+            LV.Items.Add(12);
 
             if (data.epochCount != 0)
                 initOrUpdateDataGrid();
@@ -174,6 +179,22 @@ namespace WpfApp2.UI.Components
             var isSaved = data.SaveAllData(db);
             if ( isSaved )
                 notifyOnDataChanged(true);
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("^[.][0-9]+$|^[0-9]*[.]{0,1}[0-9]*$");
+            e.Handled = !regex.IsMatch((sender as TextBox).Text.Insert((sender as TextBox).SelectionStart, e.Text));
+        }
+
+        private void Button_Click_4(object sender, System.Windows.RoutedEventArgs e)
+        {
+
+            data.eAccuracy = Double.Parse(eac.Text.Trim(), CultureInfo.InvariantCulture);
+            data.aAccuracy = Double.Parse(acoef.Text.Trim(), CultureInfo.InvariantCulture);
+
+            notifyOnDataChanged();
+
         }
     }
 }

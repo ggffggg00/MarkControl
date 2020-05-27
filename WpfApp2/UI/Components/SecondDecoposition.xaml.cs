@@ -41,7 +41,7 @@ namespace WpfApp2.UI.Components
         }
 
         void showBlockDecomposition(string blockName) {
-
+            cc.Content = null;
             FirstDecomposition fr = new FirstDecomposition(data, getBlockMarks(blockName));
             cc.Content = fr;
         
@@ -52,7 +52,6 @@ namespace WpfApp2.UI.Components
 
             foreach (JObject obj in data.markInBlockOrder)
             {
-
                 var currName = ((string)obj["blockName"]);
 
                 if (currName == blockName)
@@ -71,6 +70,9 @@ namespace WpfApp2.UI.Components
             
 
             string lbi = (sender as ComboBox).SelectedItem as string;
+            if (lbi == null)
+                return;
+
             var blockName = lbi.Replace("Блок ","").Trim();
             showBlockDecomposition(blockName);
 

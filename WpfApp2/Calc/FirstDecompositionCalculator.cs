@@ -63,7 +63,7 @@ namespace WpfApp2.Calc {
 
         public double stabilityPractice(int epochIndex)
         {
-            return Math.Abs(M(epochIndex) - M(0));
+            return M(epochIndex) - M(0);
         }
 
         public bool hasStable(int epochIndex)
@@ -109,7 +109,11 @@ namespace WpfApp2.Calc {
 
         private double alpha(double H, double M0, double M)
         {
-            return Math.Acos(H / (M0 * M));
+
+            double alpha = Math.Acos((H / (M0 * M)) >= 1 ? 1 : (H / (M0 * M)));
+
+            return (alpha * (3600 * 180) / Math.PI);
+
         }
 
 

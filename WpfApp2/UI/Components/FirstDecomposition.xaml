@@ -40,13 +40,13 @@
 
         <Style TargetType="visualizationToolkit:Legend" x:Key="LegendStyle">
             <Setter Property="Background" Value="#22252a" />
+            <Setter Property="Width" Value="0"/>
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontFamily" Value="Gotham Pro Light"/>
             <Setter Property="FontSize" Value="14"/>
-
             <Setter Property="Foreground" Value="#d3dae3"/>
         </Style>
-        
+
         <Style TargetType="Grid" x:Key="PlotStyle">
             <Setter Property="Background" Value="#22252a" />
         </Style>
@@ -70,11 +70,11 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        
+
+
     </UserControl.Resources>
-    
-    
+
+
     <Grid>
         <Border BorderBrush="#FF393F4C" BorderThickness="1" Padding="5" Margin="5">
             <Grid>
@@ -97,6 +97,7 @@
                         VerticalGridLinesBrush="#393f4c"
                         GridLinesVisibility="All"
                         Background="{x:Null}"
+                    
                         FontFamily="Gotham Pro Light"
                         ItemsSource="{Binding}" BorderBrush="{x:Null}" >
 
@@ -122,6 +123,7 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
+
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="Background" Value="#41416a"/>
                             <Setter Property="FontWeight" Value="Bold"/>
@@ -136,20 +138,34 @@
                 <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FF393F4C" />
 
                 <Grid Background="{x:Null}" Grid.Row="2">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
                     <chartingToolkit:Chart  
+                        Grid.Column="0"
                         x:Name="lineChart"
                         Palette="{StaticResource MyPalette}"
                         Title="График траектории" 
-                        Margin="0,10,5,0"
+                        Margin="0,10,10,0"
                         LegendStyle="{StaticResource LegendStyle}"
                         PlotAreaStyle="{StaticResource PlotStyle}"
                         BorderBrush="#FF393F4C"
                         >
-                        <local:UnorderedLineSeries Visibility="Hidden" x:Name="mSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Фазовая траектория" ItemsSource="{Binding Path=mList}"/>
+                        <local:UnorderedLineSeries x:Name="mSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Фазовая траектория" ItemsSource="{Binding Path=mList}"/>
                         <local:UnorderedLineSeries x:Name="mPSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория верхней границы" ItemsSource="{Binding Path=mPlusList}" />
                         <local:UnorderedLineSeries x:Name="mMSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория нижней границы" ItemsSource="{Binding Path=mMinusList}"  />
-                        <local:UnorderedLineSeries x:Name="mPredictSeries"  DependentValuePath="alpha" IndependentValuePath="m" DataPointStyle="{StaticResource LineDataPoint}" Title="Траектория нижней границы" ItemsSource="{Binding Path=mPredictList}"  />
                     </chartingToolkit:Chart>
+
+                    <StackPanel
+                        Grid.Column="1" Margin="10">
+                        <CheckBox x:Name="mCheckbox" Content="Фактическое значение (М)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
+                        <CheckBox x:Name="mPCheckbox" Content="Верхняя граница (M+)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
+                        <CheckBox x:Name="mMCheckbox" Content="Нижняя граница (M-)" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
+
+                    </StackPanel>
                 </Grid>
 
 

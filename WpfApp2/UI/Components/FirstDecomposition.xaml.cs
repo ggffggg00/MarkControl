@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows.Controls;
 using WpfApp2.Calc;
 using WpfApp2.DB.Models;
+using System.Windows;
 
 
 namespace WpfApp2.UI.Components
@@ -44,6 +45,10 @@ namespace WpfApp2.UI.Components
 
         }
 
+
+    
+
+
     public partial class FirstDecomposition : UserControl, DataChangeNotifier
     {
         ProjectData data;
@@ -62,9 +67,17 @@ namespace WpfApp2.UI.Components
 
             showOrUpdateChart();
             buildTable();
-            
 
         }
+
+        void verifyCheckboxes()
+        {
+            mSeries.Visibility = (bool)mCheckbox.IsChecked ? Visibility.Visible : Visibility.Hidden;
+            mPSeries.Visibility = (bool)mPCheckbox.IsChecked ? Visibility.Visible : Visibility.Hidden;
+            mMSeries.Visibility = (bool)mMCheckbox.IsChecked ? Visibility.Visible : Visibility.Hidden;
+
+        }
+
 
         private void showOrUpdateChart()
         {
@@ -72,6 +85,11 @@ namespace WpfApp2.UI.Components
             this.chartData = new ChartData();
             lineChart.DataContext = this.chartData;
         }
+
+
+        
+
+
 
         void buildTable()
         {
@@ -138,5 +156,9 @@ namespace WpfApp2.UI.Components
             buildTable();
         }
 
+        private void mCheckbox_Click(object sender, RoutedEventArgs e)
+        {
+            verifyCheckboxes();
+        }
     }
 }
