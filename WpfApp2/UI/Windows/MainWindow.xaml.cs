@@ -46,6 +46,8 @@ namespace WpfApp2
             dtExp.dataChangeEvent += InvokeNotification;
             addTab("Обозреватель данных", dtExp);
 
+            setEpoch();
+
             if (projectData.epochCount != 0)
                 registerAllComponents();
 

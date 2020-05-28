@@ -8,6 +8,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -43,8 +44,10 @@ namespace WpfApp2.UI.Components
             if (data.epochCount != 0)
                 initOrUpdateDataGrid();
 
-            eac.Text = String.Format("{0:0.#########}", data.eAccuracy);
-            acoef.Text = String.Format("{0:0.#########}", data.eAccuracy);
+            
+
+            eac.Text = Convert.ToDecimal(data.eAccuracy).ToString();
+            acoef.Text = Convert.ToDecimal(data.aAccuracy).ToString();
 
         }
 
@@ -83,11 +86,11 @@ namespace WpfApp2.UI.Components
 
         }
 
-        void notifyOnDataChanged(bool isWriteDb = false) {
+        void notifyOnDataChanged(bool isWriteDb = false, bool needToUpdateTable = true) {
 
             setEmpty(data.epochCount == 0);
 
-            if (data.epochCount != 0)
+            if (needToUpdateTable)
                 initOrUpdateDataGrid();
 
 
@@ -184,18 +187,50 @@ namespace WpfApp2.UI.Components
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("^[.][0-9]+$|^[0-9]*[.]{0,1}[0-9]*$");
-            e.Handled = !regex.IsMatch((sender as TextBox).Text.Insert((sender as TextBox).SelectionStart, e.Text));
+            var regex = new Regex(@"^[0-9]*(?:\,[0-9]*)?$");
+            if (regex.IsMatch(e.Text) && !(e.Text == "," && ((TextBox)sender).Text.Contains(e.Text)))
+                e.Handled = false;
+
+            else
+                e.Handled = true;
         }
 
-        private void Button_Click_4(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Click_4(object sender, RoutedEventArgs e)
         {
 
-            data.eAccuracy = Double.Parse(eac.Text.Trim(), CultureInfo.InvariantCulture);
-            data.aAccuracy = Double.Parse(acoef.Text.Trim(), CultureInfo.InvariantCulture);
+            data.eAccuracy = double.Parse(eac.Text);
+            data.aAccuracy = double.Parse(acoef.Text);
 
             notifyOnDataChanged();
 
+        }
+
+
+        private void dtGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Cancel)
+                return;
+
+            int rowIndex = e.Row.GetIndex();
+            int columnIndex = e.Column.DisplayIndex;
+
+            double currentValue = data.marks[rowIndex].marks[columnIndex];
+            double newValue;
+
+            Double.TryParse(((TextBox)e.EditingElement).Text, out newValue);
+
+            if (newValue != 0 && newValue != currentValue)
+            {
+                data.marks[rowIndex].marks[columnIndex] = newValue;
+                notifyOnDataChanged(false,false);
+            }
+                
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            data.addPredictedRow();
+            notifyOnDataChanged(false, true);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 using WpfApp2.DB.Models;
+using System.Windows;
 
 namespace WpfApp2.Calc {
 
@@ -120,6 +121,9 @@ namespace WpfApp2.Calc {
         public double calculateMPredict(int epochIndex)
         {
             double a = data.aAccuracy;
+
+
+
             if (epochIndex == 0)
             {
                 double avgM = averageM();

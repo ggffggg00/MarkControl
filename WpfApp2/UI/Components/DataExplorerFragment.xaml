@@ -69,7 +69,7 @@
             FontFamily="Gotham Pro Light"
             ItemsSource="{Binding}" 
             BorderBrush="#FF393F4C"
-                BorderThickness="1">
+                BorderThickness="1" CellEditEnding="dtGrid_CellEditEnding">
 
                 <DataGrid.Resources>
                     <Style TargetType="{x:Type DataGrid}">
@@ -121,7 +121,7 @@
                     <GroupBox Grid.Column="0" Header="Данные" HorizontalAlignment="Left" Foreground="#FF8B9EB5" BorderThickness="0.5" Width="237" Margin="0,0,0,5">
                         <StackPanel>
                             <Button Style="{StaticResource ResourceKey=ButtonStyle}" Content="Применить изменения"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto" Click="Button_Click_3" />
-                            <Button Style="{StaticResource ButtonStyle}" Content="Добавить эпоху"  VerticalAlignment="Top" Margin="10,5,10,0" Width="Auto"/>
+                            <Button Style="{StaticResource ButtonStyle}" Content="Добавить эпоху"  VerticalAlignment="Top" Margin="10,5,10,0" Width="Auto" Click="Button_Click_5"/>
                             <Button Style="{StaticResource ButtonStyle}" Content="Импорт значений"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto" Click="Button_Click_1"/>
                             <Button Style="{StaticResource ButtonStyle}" Content="Экспорт значений"  VerticalAlignment="Top" Padding="10" Margin="10,5,10,0" Width="Auto" Click="Button_Click_2"/>
                             <StackPanel Height="50" Margin="10,0">
@@ -131,7 +131,7 @@
                                         <ColumnDefinition Width="145*"/>
                                         <ColumnDefinition Width="61*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="eac" Height="24" TextWrapping="Wrap" Text="0.001" Foreground="#FFA0B9D6" Background="#FF22252A" BorderBrush="#FF393F4C" SelectionBrush="#FF41416A" VerticalAlignment="Center" Padding="5,0" HorizontalAlignment="Left" Width="86" Margin="0,1,0,4" PreviewTextInput="TextBox_PreviewTextInput"/>
+                                    <TextBox x:Name="eac" Height="24" TextWrapping="Wrap" Foreground="#FFA0B9D6" Background="#FF22252A" BorderBrush="#FF393F4C" SelectionBrush="#FF41416A" VerticalAlignment="Center" Padding="5,0" HorizontalAlignment="Left" Width="86" Margin="0,1,0,4" PreviewTextInput="TextBox_PreviewTextInput"/>
                                     <Button Style="{StaticResource ButtonStyle}" Content="Применить"  VerticalAlignment="Bottom" Padding="10" Margin="0,0,5,4" Width="109" Height="24" HorizontalAlignment="Right" Grid.ColumnSpan="2" Click="Button_Click_4"/>
                                 </Grid>
                             </StackPanel>
@@ -142,7 +142,7 @@
                                         <ColumnDefinition Width="145*"/>
                                         <ColumnDefinition Width="61*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="acoef" Height="24" TextWrapping="Wrap" Text="0.1" Foreground="#FFA0B9D6" Background="#FF22252A" BorderBrush="#FF393F4C" SelectionBrush="#FF41416A" VerticalAlignment="Center" Padding="5,0" HorizontalAlignment="Left" Width="86" Margin="0,0,0,5" PreviewTextInput="TextBox_PreviewTextInput"/>
+                                    <TextBox x:Name="acoef" Height="24" TextWrapping="Wrap" Foreground="#FFA0B9D6" Background="#FF22252A" BorderBrush="#FF393F4C" SelectionBrush="#FF41416A" VerticalAlignment="Center" Padding="5,0" HorizontalAlignment="Left" Width="86" Margin="0,0,0,5" PreviewTextInput="TextBox_PreviewTextInput"/>
                                     <Button Style="{StaticResource ButtonStyle}" Content="Применить"  VerticalAlignment="Bottom" Padding="10" Margin="0,0,5,5" Width="109" Height="24" HorizontalAlignment="Right" Grid.ColumnSpan="2" Click="Button_Click_4"/>
                                 </Grid>
                             </StackPanel>

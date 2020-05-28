@@ -138,6 +138,47 @@ namespace WpfApp2.DB.Models
         {
             this.marks.AddRange(ls);
         }
+
+        internal void addPredictedRow() {
+
+            MarksRow row = new MarksRow(epochCount);
+
+            for (int markIndex = 1; markIndex <= marksCount; markIndex++)
+                row.addMark(markIndex, predictMarkValue(markIndex));
+
+            this.marks.Add(row);
+
+
+            
+
+        }
+
+        private double randomDouble(double max = 0, double min = 0) {
+            Random random = new Random();
+            return random.NextDouble() * (max - min) + min;
+
+        }
+
+        private double predictMarkValue(int markIndex) {
+            double avg = 0;
+            
+
+            for (int i = 1; i < epochCount; i++)
+            {
+                double currVal = marks[i].marks[markIndex];
+                double prevVal = marks[i - 1].marks[markIndex];
+                avg += Math.Abs(currVal - prevVal);
+            }
+
+            avg = avg / (epochCount - 1);
+
+            double zeroMark = marks[0].marks[markIndex];
+            double randomSeed = randomDouble(avg, avg * (-1));
+
+            return Math.Round(zeroMark + randomSeed, 4);
+
+        }
+
     }
 
 

@@ -80,9 +80,9 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
             <Grid>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" MinHeight="100"/>
                     <RowDefinition Height="12" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" MinHeight="258"  />
                 </Grid.RowDefinitions>
 
                 <Border BorderBrush="#FF393F4C" BorderThickness="1" Padding="5"  Grid.Row="0">
@@ -118,10 +118,13 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
                                         <Setter Property="Foreground" Value="White" />
                                     </Trigger>
                                     <DataTrigger Binding="{Binding stability}" Value="False">
-                                        <Setter Property="Background"  Value="#4d0005" />
+                                        <Setter Property="Background"  Value="#5F0000" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding stability}" Value="True">
                                         <Setter Property="Background"  Value="#2f343f" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding hasPredict}" Value="True">
+                                        <Setter Property="Background"  Value="#5F5800" />
                                     </DataTrigger>
 
                                 </Style.Triggers>
@@ -181,6 +184,10 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
                                 <CheckBox x:Name="mPCheckbox" Content="Верхний предел" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
                                 <CheckBox x:Name="mMCheckbox" Content="Нижний предел" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
                                 <CheckBox x:Name="mPredictCheckbox" Content="Прогнозная траектория" Background="#FF444469" Foreground="#FFB9B9B9" FontSize="14" BorderBrush="#FF3D434E" Margin="0,0,0,7" IsChecked="True" Click="mCheckbox_Click"/>
+                                <Grid Height="112" Margin="0,10,0,0">
+                                    <Label Content="Объект устойчив" VerticalAlignment="Top" x:Name="statusLabel" Foreground="#FFB7B7B7" FontFamily="Gotham Pro Light" FontSize="18"/>
+                                    <TextBlock x:Name="statusDescription" Margin="5,33,5,0" TextWrapping="Wrap" Text="Объект устойчив на всех эпохах. Нет необходимости проводить второй уровень декомпозиции" FontFamily="Gotham Pro Light" Foreground="#FFB7B7B7"/>
+                                </Grid>
 
 
                             </StackPanel>
