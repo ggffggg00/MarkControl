@@ -138,6 +138,7 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
                                 <GridViewColumn  Header="Эпоха" DisplayMemberBinding="{Binding Path=epoch}"/>
                                 <GridViewColumn  Header="M" DisplayMemberBinding="{Binding m, StringFormat=0.######}"/>
                                 <GridViewColumn  Header="M pr" DisplayMemberBinding="{Binding mPredict, StringFormat=0.######}"/>
+                                <GridViewColumn  Header="Alpha pr" DisplayMemberBinding="{Binding alphaPredict, StringFormat=0.######}"/>
                                 <GridViewColumn  Header="Alpha" DisplayMemberBinding="{Binding alpha, StringFormat=0.######}"/>
                                 <GridViewColumn  Header="M+" DisplayMemberBinding="{Binding mPlus, StringFormat=0.######}"/>
                                 <GridViewColumn  Header="M-" DisplayMemberBinding="{Binding mMinus, StringFormat=0.######}"/>

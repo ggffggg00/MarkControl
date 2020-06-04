@@ -79,6 +79,7 @@ namespace WpfApp2.UI.Components
 
             }
 
+
             dtGrid.DataContext = Data.DefaultView;
             dtGrid.ItemsSource = Data.DefaultView;
 

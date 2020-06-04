@@ -24,12 +24,13 @@ namespace WpfApp2.UI.Components
         public double mPlus{ get; }
         public double mMinus{ get; }
         public double mPredict{ get; }
+        public double alphaPredict{ get; }
         public double alphaPlus{ get; }
         public double alphaMinus{ get; }
         public bool stability{ get; }
         public bool hasPredict { get; }
 
-        public TableRow(int epoch, double m, double alpha, double mPlus, double mMinus, double mPredict, double alphaPlus, double alphaMinus, bool stability, bool hasPredict = false)
+        public TableRow(int epoch, double m, double alpha, double mPlus, double mMinus, double mPredict, double alphaPredict, double alphaPlus, double alphaMinus, bool stability, bool hasPredict = false)
         {
             this.epoch = epoch;
             this.m = m;
@@ -37,6 +38,7 @@ namespace WpfApp2.UI.Components
             this.mPlus = mPlus;
             this.mMinus = mMinus;
             this.mPredict = mPredict;
+            this.alphaPredict = alphaPredict;
             this.alphaPlus = alphaPlus;
             this.alphaMinus = alphaMinus;
             this.stability = stability;
@@ -76,24 +78,12 @@ namespace WpfApp2.UI.Components
 
             chart.Series.Clear();
 
-            Color fcolor = Color.FromArgb(185, 185, 185);
+            styleChart();
 
-            chart.ChartAreas[0].AxisX.LineColor = fcolor;
-            chart.ChartAreas[0].AxisX.LabelStyle.Format = "#.#####";
-            chart.ChartAreas[0].AxisX.IsMarginVisible = false;
-            chart.ChartAreas[0].AxisX.MajorGrid.LineColor = fcolor;
-            chart.ChartAreas[0].AxisX.LabelStyle.ForeColor = fcolor;
-
-            chart.ChartAreas[0].AxisY.LineColor = fcolor;
-            chart.ChartAreas[0].AxisY.LabelStyle.Format = "#.#####";
-            chart.ChartAreas[0].AxisY.IsMarginVisible = false;
-            chart.ChartAreas[0].AxisY.MajorGrid.LineColor = fcolor;
-            chart.ChartAreas[0].AxisY.LabelStyle.ForeColor = fcolor;
-
-                Series mSeries = constructSeries("Фазовая траектория");
-                Series mPSeries = constructSeries("Нижний предел");
-                Series mMSeries = constructSeries("Верхний предел");
-                Series mPredictSeries = constructSeries("Прогнозируемая траектория");
+            Series mSeries = constructSeries("Фазовая траектория");
+            Series mPSeries = constructSeries("Нижний предел");
+            Series mMSeries = constructSeries("Верхний предел");
+            Series mPredictSeries = constructSeries("Прогнозируемая траектория");
 
             
 
@@ -107,9 +97,9 @@ namespace WpfApp2.UI.Components
             for (int i = 0; i<data.epochCount; i++)
             {
                     chart.Series[0].Points.Add(constructDataPoint(calc.calculateM(i), calc.calculateAlpha(i)));
-                    chart.Series[1].Points.Add(constructDataPoint(calc.calculateM_plus(i), calc.calculateAlpha(i)));
-                    chart.Series[2].Points.Add(constructDataPoint(calc.calculateM_minus(i), calc.calculateAlpha(i)));
-                    chart.Series[3].Points.Add(constructDataPoint(calc.calculateMPredict(i), calc.calculateAlpha(i)));
+                    chart.Series[1].Points.Add(constructDataPoint(calc.calculateM_plus(i), calc.calculateAlpha_plus(i)));
+                    chart.Series[2].Points.Add(constructDataPoint(calc.calculateM_minus(i), calc.calculateAlpha_minus(i)));
+                    chart.Series[3].Points.Add(constructDataPoint(calc.calculateMPredict(i), calc.calculateAlphaPredict(i)));
                 
             }
 
@@ -176,6 +166,7 @@ namespace WpfApp2.UI.Components
                     calc.calculateM_plus(index),
                     calc.calculateM_minus(index),
                     calc.calculateMPredict(index),
+                    calc.calculateAlphaPredict(index),
                     calc.calculateAlpha_plus(index),
                     calc.calculateAlpha_minus(index),
                     calc.hasStable(index)
@@ -199,6 +190,7 @@ namespace WpfApp2.UI.Components
                     0,
                     0,
                     calc.calculateMPredict(data.epochCount),
+                    calc.calculateAlphaPredict(data.epochCount),
                     0,
                     0,
                     true,
@@ -222,8 +214,8 @@ namespace WpfApp2.UI.Components
                 System.Windows.Media.Brushes.Red;
 
             statusDescription.Text = hasStable ?
-                "Объект устойчив на всех эпохах. В проведении второго уровня декомпозиции нет необходимости" :
-                "Объект не устойчив на некоторых эпохах. Рекомендуется исследовать объект на втором уровне декомпозиции";
+                "Объект устойчив на всех эпохах. В проведении следующего уровня декомпозиции нет необходимости" :
+                "Объект не устойчив на некоторых эпохах. Рекомендуется исследовать объект на следующем уровне декомпозиции";
 
 
         }
@@ -245,11 +237,42 @@ namespace WpfApp2.UI.Components
             chart.Series[1].Enabled = (bool)mPCheckbox.IsChecked;
             chart.Series[2].Enabled = (bool)mMCheckbox.IsChecked;
             chart.Series[3].Enabled = (bool)mPredictCheckbox.IsChecked;
+
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             
         }
+
+
+        /// <summary>
+        /// Настраивает график согласно нашему стилю (да, да, костыль, но другого выбора нет)
+        /// </summary>
+        void styleChart()
+        {
+            Chart chart = this.FindName("MyWinformChart") as Chart;
+
+            Color fcolor = Color.FromArgb(185, 185, 185);
+
+            chart.ChartAreas[0].AxisX.LineColor = fcolor;
+            chart.ChartAreas[0].AxisX.Title = "M";
+            chart.ChartAreas[0].AxisX.TitleForeColor = fcolor;
+            chart.ChartAreas[0].AxisX.LabelStyle.Format = "#.#####";
+            chart.ChartAreas[0].AxisX.IsMarginVisible = false;
+            chart.ChartAreas[0].AxisX.MajorGrid.LineColor = fcolor;
+            chart.ChartAreas[0].AxisX.LabelStyle.ForeColor = fcolor;
+
+            chart.ChartAreas[0].AxisY.LineColor = fcolor;
+            chart.ChartAreas[0].AxisY.Title = "Alpha''";
+            chart.ChartAreas[0].AxisY.TitleForeColor = fcolor;
+            chart.ChartAreas[0].AxisY.LabelStyle.Format = "#.#####";
+            chart.ChartAreas[0].AxisY.IsMarginVisible = false;
+            chart.ChartAreas[0].AxisY.MajorGrid.LineColor = fcolor;
+            chart.ChartAreas[0].AxisY.LabelStyle.ForeColor = fcolor;
+
+        }
+
+
     }
 }

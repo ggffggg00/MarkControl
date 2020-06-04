@@ -3,6 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+             xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+             xmlns:winformchart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
+             
              xmlns:local="clr-namespace:WpfApp2.UI.Components"
              mc:Ignorable="d" 
              Margin="-3,0,0,0"
@@ -10,20 +14,101 @@
 
 
 
+    <UserControl.Resources>
+        <Style TargetType="Label" x:Key="LargeLabel">
+            <Setter Property="Foreground" Value="#FFC5D3E4"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="FontFamily" Value="Gotham Pro Light"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
 
-    
-    <Grid>
-        <ComboBox x:Name="cmbb" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged"  BorderBrush="{x:Null}">
+    </UserControl.Resources>
 
-            <ComboBox.ItemContainerStyle>
-                <Style TargetType="ComboBoxItem">
-                    <Setter Property="Background" Value="#41416a"/>
-                    <Setter Property="BorderBrush" Value="#41416a"/>
-                    <Setter Property="Foreground" Value="White"/>
-                </Style>
-            </ComboBox.ItemContainerStyle>
-        </ComboBox>
-        <ContentControl x:Name="cc" Content="" Margin="3,37,0,0"/>
+
+    <Grid Margin="0">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" MinWidth="250" MaxWidth="520" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <ContentControl x:Name="cc" Content=""/>
+        </Grid>
+
+        <GridSplitter Width="3" Margin="0,0,5,0" Grid.Column="1" VerticalAlignment="Stretch" ShowsPreview="False" HorizontalAlignment="Center" Background="#FF2F343F" />
+
+        <StackPanel Grid.Column="2" Background="#FF2F343F">
+            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+                <StackPanel Height="66" Margin="0"  >
+                    <Label  Content="Отобразить блок" Style="{StaticResource LargeLabel}" />
+                    <ComboBox x:Name="cmbb"  Margin="5,5,0,0" Height="23" SelectionChanged="ComboBox_SelectionChanged"  BorderBrush="{x:Null}" VerticalAlignment="Top">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="Background" Value="#41416a"/>
+                                <Setter Property="BorderBrush" Value="#41416a"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
+                <StackPanel Margin="0">
+                    <Label  Content="Распределение марок" Style="{StaticResource LargeLabel}" />
+                    <ListView x:Name="LV" BorderThickness="0" Background="#FF2F343F" Height="Auto">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Focusable" Value="false"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="2" >
+                                    <CheckBox 
+                                        Background="#FFC5D3E4" 
+                                        Foreground="#FFB9B9B9" 
+                                        FontSize="12" 
+                                        BorderBrush="#FF3D434E"
+                                        IsChecked="{Binding IsChecked}"
+                                        Checked="CheckBox_Checked"
+                                        Click="CheckBox_Checked"/>
+                                    <TextBlock 
+                                            Foreground="#FFD2D9E2" 
+                                            Margin="2" 
+                                            FontSize="12" 
+                                            FontFamily="Gotham Pro Light"  
+                                            Text="{Binding Text}" 
+                                            HorizontalAlignment="Center"  />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
+                <StackPanel Margin="0">
+                    <Label  Content="График фазовых значений" Style="{StaticResource LargeLabel}" />
+                    <WindowsFormsHost x:Name="host" Background="#22252A">
+                        <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" Height="180" BackColor="#FF2F343F">
+                            <winformchart:Chart.ChartAreas>
+                                <winformchart:ChartArea BackColor="#FF2F343F" Name="График"/>
+                            </winformchart:Chart.ChartAreas>
+                            <winformchart:Chart.Legends>
+                                <winformchart:Legend BackColor="#FF2F343F" ForeColor="#B9B9B9" LegendStyle="Row" Name="legend1" Docking="Bottom"/>
+                            </winformchart:Chart.Legends>
+
+                        </winformchart:Chart>
+                    </WindowsFormsHost>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,5"  Height="Auto" Padding="5">
+                <Image  RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" x:Name="img" Height="Auto" ></Image>
+            </Border>
+        </StackPanel>
+
 
     </Grid>
 </UserControl>

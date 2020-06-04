@@ -46,7 +46,7 @@ namespace WpfApp2
             dtExp.dataChangeEvent += InvokeNotification;
             addTab("Обозреватель данных", dtExp);
 
-            setEpoch();
+            UpdateStatusBar();
 
             if (projectData.epochCount != 0)
                 registerAllComponents();
@@ -60,6 +60,7 @@ namespace WpfApp2
 
             registerNotifierComponent("Декомпозиция 1 ур.", new FirstDecomposition(projectData));
             registerNotifierComponent("Декомпозиция 2 ур.", new SecondDecoposition(projectData));
+            registerNotifierComponent("Декомпозиция 3 ур.", new ThirdDecomposition(projectData));
 
             isComponentsRegistered = true;
         }
@@ -74,7 +75,7 @@ namespace WpfApp2
             
 
             setDataUpToDate(e.isUpToDate);
-            setEpoch();
+            UpdateStatusBar();
 
             if( e.needToNotifyFragments )
             //Перебираем список всех подписчиков события и уведомляем
@@ -105,8 +106,11 @@ namespace WpfApp2
             addTab(title, content);
         }
 
-        void setEpoch() {
+        void UpdateStatusBar() {
             epochIndicator.Text = "Количество эпох: "+projectData.epochCount.ToString();
+            Eindicator.Text = "E = "+projectData.eAccuracy.ToString();
+            AIndicator.Text = "A = "+projectData.aAccuracy.ToString();
+            projectNameIndicator.Text = projectData.name;
         }
 
         void setDataUpToDate(bool flag) {
@@ -134,7 +138,14 @@ namespace WpfApp2
 
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
 
-
+            tabControl.Items.Clear();
+            tabControl.InvalidateVisual();
+            Window1 win = new Window1();
+            win.Show();
+            this.Close();
+        }
     }
 }

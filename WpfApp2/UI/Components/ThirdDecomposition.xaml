@@ -1,0 +1,147 @@
+﻿<UserControl x:Class="WpfApp2.UI.Components.ThirdDecomposition"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+             xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+             xmlns:winformchart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
+             xmlns:local="clr-namespace:WpfApp2.UI.Components"
+             xmlns:Graphite="clr-namespace:Orbifold.Graphite;assembly=Orbifold.Graphite"
+             mc:Ignorable="d" 
+             Margin="-3,0,0,0"
+             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a" Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+        <Style TargetType="Label" x:Key="LargeLabel">
+            <Setter Property="Foreground" Value="#FFC5D3E4"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="FontFamily" Value="Gotham Pro Light"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
+    </UserControl.Resources>
+
+
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="300" MinWidth="250" MaxWidth="520" />
+        </Grid.ColumnDefinitions>
+
+
+
+        <TabControl Margin="0,0,0,0" Background="#22252a" BorderThickness="0">
+            <TabItem Foreground="#d3dae3" Header="Проверка связей">
+                <Grid Background="#22252a">
+                    <Border Grid.Row="0" BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+                        <DataGrid 
+                        
+                        x:Name="dtGrid"
+                        Margin="5,5,10,281"
+                        EnableColumnVirtualization="False"
+                        VirtualizingStackPanel.VirtualizationMode="Standard"
+                        VerticalScrollBarVisibility="Disabled"
+                        HorizontalContentAlignment="Center"
+                        FontSize="12"
+                        IsReadOnly="true"
+                        ColumnWidth="*"
+                        HorizontalGridLinesBrush="#393f4c"
+                        VerticalGridLinesBrush="#393f4c"
+                        GridLinesVisibility="All"
+                        Background="{x:Null}"
+                        FontFamily="Gotham Pro Light"
+                        ItemsSource="{Binding}" 
+                        BorderBrush="#FF393F4C"
+                        BorderThickness="1" 
+                        Height="Auto">
+
+
+                            <DataGrid.Resources>
+                                <local:DataRowViewConverter x:Key="drvc"/>
+
+                                <Style TargetType="{x:Type DataGrid}">
+                                    <Setter Property="Background" Value="#22252a"/>
+                                </Style>
+                                <Style TargetType="{x:Type DataGridRow}">
+                                    <Setter Property="Background" Value="#2f343f"/>
+                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="Foreground" Value="#9ba1a8"/>
+                                </Style>
+                                <Style TargetType="{x:Type DataGridRowHeader}">
+                                    <Setter Property="Background" Value="#41416a"/>
+                                </Style>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Setter Property="Padding" Value="10"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#19374f" />
+                                            <Setter Property="Foreground" Value="White" />
+                                            <Setter Property="BorderThickness" Value="0" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="Background" Value="#41416a"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Padding" Value="5,5,5,5"/>
+                                    <Setter Property="FontSize" Value="15"/>
+                                    <Setter Property="Foreground" Value="#d3dae3"/>
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                </Style>
+                            </DataGrid.Resources>
+
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource Self}, Converter={StaticResource drvc}}"/>
+                                    <Setter Property="Background" Value="{Binding Tag.Color, RelativeSource={RelativeSource Self}}"/>
+                                </Style>
+                            </DataGrid.CellStyle>
+
+
+                        </DataGrid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Foreground="White" Header="TabItem" Visibility="Hidden">
+                <Grid Background="#FFE5E5E5">
+                    
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <GridSplitter Width="3" Margin="0,0,5,0" Grid.Column="1" VerticalAlignment="Stretch" ShowsPreview="False" HorizontalAlignment="Center" Background="#FF2F343F" />
+
+        <StackPanel Grid.Column="2" Background="#FF2F343F">
+            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+                <StackPanel Height="66" Margin="0"  >
+                    <Label  Content="Разбор на подблоки" Style="{StaticResource LargeLabel}" />
+
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
+                <StackPanel Margin="0">
+                    <Label  Content="Граф связей" Style="{StaticResource LargeLabel}" />
+                    <Graphite:GraphCanvas x:Name="diagram" Margin="0,0,0,0" Height="130"/>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
+                <StackPanel Margin="0">
+                    <Label  Content="График фазовых значений" Style="{StaticResource LargeLabel}" />
+                   
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,5"  Height="Auto" Padding="5">
+                <Image  RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" x:Name="img" Height="Auto" ></Image>
+            </Border>
+        </StackPanel>
+
+
+
+
+
+    </Grid>
+</UserControl>

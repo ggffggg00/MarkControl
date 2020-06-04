@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using WpfApp2.UI.Windows;
 
 namespace WpfApp2
 {
@@ -20,8 +22,10 @@ namespace WpfApp2
             this.ProjectList.ItemsSource = list;
             if (list.Count == 0)
                 this.minifyProjectsList();
-            //openMainWindow(2);
 
+            BlockInputFormDialog main = new BlockInputFormDialog(4, Enumerable.Range(1,12).ToArray());
+            main.Show();
+            this.Close();
         }
 
 
@@ -74,6 +78,11 @@ namespace WpfApp2
             ProjectShortEntry pr = (ProjectShortEntry)ProjectList.SelectedItem;
             openMainWindow(pr.id);
             
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

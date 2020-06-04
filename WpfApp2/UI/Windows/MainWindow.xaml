@@ -6,6 +6,35 @@
         xmlns:local="clr-namespace:WpfApp2"
         mc:Ignorable="d"
         Title="MainWindow" Height="598.5" Width="1053.5" ResizeMode="CanResizeWithGrip" Background="#FF2F343F" WindowStartupLocation="CenterScreen">
+
+
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Background" Value="#FF3D4055"/>
+            <Setter Property="Height" Value="29"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#FFD3DAE3"/>
+            <Setter Property="FontSize" Value="12"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF4B5364"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
+    
     <Grid Margin="0.6,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="37*"/>
@@ -16,7 +45,7 @@
         </Grid.ColumnDefinitions>
 
 
-        <TabControl x:Name="tabControl" TabStripPlacement="Left" Background="#FF2F343F" BorderBrush="{x:Null}" Grid.RowSpan="2" Margin="0,0,0,23" >
+        <TabControl x:Name="tabControl" TabStripPlacement="Left" Background="#FF2F343F" BorderBrush="{x:Null}" Grid.RowSpan="2" Margin="0,0,0,20" >
             <TabControl.Resources>
                 <Style TargetType="{x:Type TabItem}">
                     <Setter Property="Template">
@@ -52,6 +81,21 @@
                 </StatusBarItem>
                 <StatusBarItem>
                     <TextBlock Name="epochIndicator" Text="Количество эпох: 0" Padding="10,0"/>
+                </StatusBarItem>
+                <StatusBarItem>
+                    <TextBlock x:Name="Eindicator" Text="E = 0.0001" Padding="10,0"/>
+                </StatusBarItem>
+                <StatusBarItem>
+                    <TextBlock x:Name="AIndicator" Text="A = 0.01" Padding="10,0"/>
+                </StatusBarItem>
+                <StatusBarItem HorizontalAlignment="Left">
+                    <TextBlock Text="Еденица измерения Alpha - угловая секунда ('')" Padding="10,0"/>
+                </StatusBarItem>
+                <StatusBarItem HorizontalAlignment="Right" Background="#FF3D4055">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,10,0" Height="23" VerticalAlignment="Center">
+                        <TextBlock x:Name="projectNameIndicator" Text="Вариант 11" Padding="10,1,10,0" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Button Content="Закрыть проект" Style="{StaticResource ButtonStyle}" Padding="10,0" Margin="0,0,1,0" HorizontalContentAlignment="Center" Height="Auto" Width="102" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
+                    </StackPanel>
                 </StatusBarItem>
             </StatusBar>
         </DockPanel>
