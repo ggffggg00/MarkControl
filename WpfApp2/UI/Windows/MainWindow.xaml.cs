@@ -60,7 +60,7 @@ namespace WpfApp2
 
             registerNotifierComponent("Декомпозиция 1 ур.", new FirstDecomposition(projectData));
             registerNotifierComponent("Декомпозиция 2 ур.", new SecondDecoposition(projectData));
-            registerNotifierComponent("Декомпозиция 3 ур.", new ThirdDecomposition(projectData));
+            registerNotifierComponent("Декомпозиция 3 ур.", new ThirdDecomposition(projectData, "A"));
 
             isComponentsRegistered = true;
         }

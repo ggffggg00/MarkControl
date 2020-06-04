@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace WpfApp2.UI.Windows
 {
@@ -14,7 +16,7 @@ namespace WpfApp2.UI.Windows
     public partial class BlockInputFormDialog : Window
     {
 
-        class BlockObject
+        public class BlockObject
         {
             public string blockName { get; set; }
             public int[] marks { get; set; }
@@ -24,8 +26,13 @@ namespace WpfApp2.UI.Windows
                 this.blockName = blockName;
                 this.marks = marks;
             }
+
+            public override string ToString()
+            {
+                return "Блок " + this.blockName + ": " + String.Join(", ", this.marks);
+            }
         }
-        JArray Result;
+        public List<BlockObject> Result { get; set; }
 
         int maxMarksPerBlock;
         int minMarksPerBlock;
@@ -38,27 +45,29 @@ namespace WpfApp2.UI.Windows
 
         ObservableCollection<int> listViewCollection = new ObservableCollection<int>();
 
-        public BlockInputFormDialog(int blockCount, int marksCount) {
-            Init(blockCount, Enumerable.Range(1,  marksCount).ToArray());
+        public BlockInputFormDialog(int blockCount, int marksCount, byte[] img) {
+            Init(blockCount, Enumerable.Range(1,  marksCount).ToArray(), img);
         }
 
-
-        public BlockInputFormDialog(int blockCount, int[] marks)
+        public BlockInputFormDialog(int blockCount, int[] marks, byte[] img)
         {
-            Init(blockCount, marks);   
+            Init(blockCount, marks, img);   
         }
 
-        void Init(int blockCount, int[] marks) {
+        void Init(int blockCount, int[] marks, byte[] imageData) {
                 this.marks = marks;
                 this.blocks = generateBlockArray(blockCount);
                 this.minMarksPerBlock = marks.Length < 4 ? 1 : 2;
                 this.maxMarksPerBlock = (int)Math.Ceiling((double)marks.Length / blockCount);
 
                 InitializeComponent();
+            
                 fillOrUpdateList();
                 updateIndicator();
                 LV.ItemsSource = listViewCollection;
                 ApplyButton.Visibility = Visibility.Hidden;
+
+                showImage(imageData);
         }
 
         string[] generateBlockArray(int blockCount)
@@ -142,9 +151,25 @@ namespace WpfApp2.UI.Windows
 
         }
 
+        /// <summary>
+        /// Загружает и показывает схему объекта
+        /// </summary>
+        void showImage(byte[] data)
+        {
+
+            byte[] buffer = data;
+            System.Windows.Media.ImageSource result;
+            using (var stream = new MemoryStream(buffer))
+            {
+                result = BitmapFrame.Create(
+                    stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+            }
+
+            img.Source = result;
+        }
+
         void Add2BlockList(BlockObject bl) {
-            string s = "Блок " + bl.blockName + ": " + String.Join(", ", bl.marks);
-            LV2.Items.Add(s);
+            LV2.Items.Add(bl.ToString()) ;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -152,6 +177,7 @@ namespace WpfApp2.UI.Windows
             blocksList.Clear();
             currentBlockIndex = 0;
             currentBlockMarks.Clear();
+            LV2.Items.Clear();
             fillOrUpdateList();
             updateIndicator();
             ApplyButton.Visibility = Visibility.Hidden;
@@ -159,12 +185,9 @@ namespace WpfApp2.UI.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            Result = new JArray();
-
-            foreach (BlockObject block in blocksList)
-                Result.Add(JObject.FromObject(block));
-
+            Result = blocksList;
             DialogResult = true;
+            Close();
         }
     }
 }

@@ -23,9 +23,9 @@ namespace WpfApp2
             if (list.Count == 0)
                 this.minifyProjectsList();
 
-            BlockInputFormDialog main = new BlockInputFormDialog(4, Enumerable.Range(1,12).ToArray());
-            main.Show();
-            this.Close();
+            //BlockInputFormDialog main = new BlockInputFormDialog(4, Enumerable.Range(1,12).ToArray());
+            //main.Show();
+            //this.Close();
         }
 
 

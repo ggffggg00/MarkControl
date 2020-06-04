@@ -15,6 +15,29 @@
             <Setter Property="FontFamily" Value="Gotham Pro Light"/>
             <Setter Property="FontSize" Value="16"/>
         </Style>
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Background" Value="#FF3D4055"/>
+            <Setter Property="Height" Value="29"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#FF8B9EB5"/>
+            <Setter Property="FontSize" Value="14"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF4B5364"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -26,7 +49,7 @@
 
 
 
-        <Image Height="218" VerticalAlignment="Bottom"/>
+        <Image x:Name="img" Height="218" VerticalAlignment="Bottom"/>
         <Grid Height="260" VerticalAlignment="Top" Margin="0,55,0,0" >
 
             <Grid.ColumnDefinitions>
@@ -58,9 +81,9 @@
                         <Label x:Name="MI" Content="5 4 3 12" Style="{StaticResource LargeLabel}" FontSize="12" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Border>
-                <Button Content="К следующей марке" Margin="0,10,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-                <Button Content="Сброс значений" VerticalAlignment="Top" Click="Button_Click_1" Margin="0,10,0,0"/>
-                <Button x:Name="ApplyButton" Content="Готово" Margin="0,10,0,0" VerticalAlignment="Top" Click="Button_Click_2"/>
+                <Button Style="{StaticResource ButtonStyle}" Content="К следующей марке" Margin="0,10,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+                <Button Style="{StaticResource ButtonStyle}" Content="Сброс значений" VerticalAlignment="Top" Click="Button_Click_1" Margin="0,10,0,0"/>
+                <Button Style="{StaticResource ButtonStyle}" x:Name="ApplyButton" Content="Готово" Margin="0,10,0,0" VerticalAlignment="Top" Click="Button_Click_2"/>
             </StackPanel>
             <ListView Grid.Column="2" x:Name="LV2" BorderThickness="0" Background="#FF22252A" Margin="0" HorizontalAlignment="Right" Width="203" SelectionChanged="LV_SelectionChanged">
                 <ListView.ItemTemplate>

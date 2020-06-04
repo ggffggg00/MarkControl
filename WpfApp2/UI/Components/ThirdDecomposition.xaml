@@ -20,6 +20,30 @@
             <Setter Property="FontSize" Value="16"/>
         </Style>
 
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Background" Value="#FF3D4055"/>
+            <Setter Property="Height" Value="29"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#FF8B9EB5"/>
+            <Setter Property="FontSize" Value="14"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="#FF393F4C" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF4B5364"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
 
 
@@ -37,11 +61,17 @@
         <TabControl Margin="0,0,0,0" Background="#22252a" BorderThickness="0">
             <TabItem Foreground="#d3dae3" Header="Проверка связей">
                 <Grid Background="#22252a">
-                    <Border Grid.Row="0" BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
                         <DataGrid 
                         
                         x:Name="dtGrid"
-                        Margin="5,5,10,281"
+                        Margin="5,5,10,5"
                         EnableColumnVirtualization="False"
                         VirtualizingStackPanel.VirtualizationMode="Standard"
                         VerticalScrollBarVisibility="Disabled"
@@ -104,11 +134,25 @@
 
                         </DataGrid>
                     </Border>
+                    <Border Grid.Row="1" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+
+                        <WindowsFormsHost x:Name="host" Background="#22252A" Margin="0,0,0,0">
+                            <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" Height="180" BackColor="#FF2F343F">
+                                <winformchart:Chart.ChartAreas>
+                                    <winformchart:ChartArea BackColor="#FF2F343F" Name="График"/>
+                                </winformchart:Chart.ChartAreas>
+                                <winformchart:Chart.Legends>
+                                    <winformchart:Legend BackColor="#FF2F343F" ForeColor="#B9B9B9" LegendStyle="Row" Name="legend1" Docking="Bottom"/>
+                                </winformchart:Chart.Legends>
+
+                            </winformchart:Chart>
+                        </WindowsFormsHost>
+                    </Border>
                 </Grid>
             </TabItem>
-            <TabItem Foreground="White" Header="TabItem" Visibility="Hidden">
-                <Grid Background="#FFE5E5E5">
-                    
+            <TabItem Header="Декомпозиция" Foreground="#d3dae3" x:Name="DecompositionTab" Visibility="Visible">
+                <Grid Background="#22252a">
+                    <ContentControl x:Name="cc" Content=""/>
                 </Grid>
             </TabItem>
         </TabControl>
@@ -116,10 +160,41 @@
         <GridSplitter Width="3" Margin="0,0,5,0" Grid.Column="1" VerticalAlignment="Stretch" ShowsPreview="False" HorizontalAlignment="Center" Background="#FF2F343F" />
 
         <StackPanel Grid.Column="2" Background="#FF2F343F">
-            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Padding="5">
-                <StackPanel Height="66" Margin="0"  >
+            <Border BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+                <StackPanel Margin="0"  >
                     <Label  Content="Разбор на подблоки" Style="{StaticResource LargeLabel}" />
+                    <Grid Height="29">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="SubBlocksCountField" Grid.Column="0" Height="24" TextWrapping="Wrap" Foreground="#FFA0B9D6" Background="#FF22252A" BorderBrush="#FF393F4C" SelectionBrush="#FF41416A" VerticalAlignment="Center" Padding="5,0" HorizontalAlignment="Left" Margin="0,0,0,5" PreviewTextInput="TextBox_PreviewTextInput" HorizontalContentAlignment="Stretch" Width="164"/>
+                        <Button Grid.Column="1" Style="{StaticResource ButtonStyle}" Content="Разобрать"  VerticalAlignment="Bottom" Padding="10" Margin="0,0,5,5" Width="95" Height="24" HorizontalAlignment="Right" Click="Button_Click_4"/>
+                    </Grid>
+                    <ListView x:Name="LV" BorderThickness="0" Background="#FF2F343F" Height="Auto" SelectionChanged="LV_SelectionChanged">
 
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="2" >
+                                    <CheckBox 
+                                        Background="#FFC5D3E4" 
+                                        Foreground="#FFB9B9B9" 
+                                        FontSize="12" 
+                                        BorderBrush="#FF3D434E"
+                                        IsChecked="{Binding IsChecked}"
+                                        Checked="CheckBox_Checked"
+                                        Click="CheckBox_Checked"/>
+                                    <TextBlock 
+                                            Foreground="#FFD2D9E2" 
+                                            Margin="2" 
+                                            FontSize="12" 
+                                            FontFamily="Gotham Pro Light"  
+                                            Text="{Binding Text}" 
+                                            HorizontalAlignment="Center"  />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
             </Border>
             <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
@@ -131,7 +206,7 @@
             <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
                 <StackPanel Margin="0">
                     <Label  Content="График фазовых значений" Style="{StaticResource LargeLabel}" />
-                   
+
                 </StackPanel>
             </Border>
             <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,5"  Height="Auto" Padding="5">
