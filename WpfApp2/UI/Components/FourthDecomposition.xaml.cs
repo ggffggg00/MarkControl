@@ -47,7 +47,7 @@ namespace WpfApp2.UI.Components
         {
             foreach (int mark in data.marks[0].marks.Keys.ToArray())
             {
-                CheckBoxListViewItem item = new CheckBoxListViewItem(mark.ToString(), false);
+                CheckBoxListViewItem item = new CheckBoxListViewItem("Марка "+mark.ToString(), false);
                 LV.Items.Add(item);
             }
                 

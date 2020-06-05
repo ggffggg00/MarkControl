@@ -151,6 +151,7 @@
     <Compile Include="DB\Models\DataChangedEventArgs.cs" />
     <Compile Include="DB\Models\ProjectData.cs" />
     <Compile Include="Calc\FirstDecompositionCalculator.cs" />
+    <Compile Include="DB\Models\ProjectInitialData.cs" />
     <Compile Include="UI\Components\DataUpdateNotifier.cs" />
     <Compile Include="UI\Components\DataExplorerFragment.xaml.cs">
       <DependentUpon>DataExplorerFragment.xaml</DependentUpon>
@@ -166,9 +167,6 @@
     </Compile>
     <Compile Include="UI\Components\ThirdDecomposition.xaml.cs">
       <DependentUpon>ThirdDecomposition.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Windows\BlockInputDialog.xaml.cs">
-      <DependentUpon>BlockInputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Windows\BlockInputFormDialog.xaml.cs">
       <DependentUpon>BlockInputFormDialog.xaml</DependentUpon>
@@ -198,10 +196,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Components\ThirdDecomposition.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Windows\BlockInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -259,15 +253,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Серый.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Белый.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Оригинал 590х595.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="UI\Windows\На альфе.png" />
   </ItemGroup>
   <ItemGroup>
@@ -275,7 +260,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="System.Windows.Controls.DataVisualization.Toolkit.dll" />
-    <Content Include="WPFToolkit.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">

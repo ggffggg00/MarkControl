@@ -32,7 +32,7 @@ namespace WpfApp2.UI.Windows
         ObservableCollection<int> listViewCollection = new ObservableCollection<int>();
 
         public BlockInputFormDialog(int blockCount, int marksCount, byte[] img) {
-            Init(blockCount, Enumerable.Range(1,  marksCount).ToArray(), img);
+            Init(blockCount, Enumerable.Range(1,  marksCount).ToArray(), img, true);
         }
 
         public BlockInputFormDialog(int blockCount, int[] marks, byte[] img)
@@ -40,11 +40,17 @@ namespace WpfApp2.UI.Windows
             Init(blockCount, marks, img);   
         }
 
-        void Init(int blockCount, int[] marks, byte[] imageData) {
-                this.marks = marks;
-                this.blocks = generateBlockArray(blockCount);
+        void Init(int blockCount, int[] marks, byte[] imageData, bool maxEqalsMin = false) {
+            this.marks = marks;
+            this.blocks = generateBlockArray(blockCount);
+
+            if (maxEqalsMin)  {
+                this.minMarksPerBlock = this.maxMarksPerBlock = (int)Math.Ceiling((double)marks.Length / blockCount);
+            } else {
                 this.minMarksPerBlock = marks.Length < 4 ? 1 : 2;
                 this.maxMarksPerBlock = (int)Math.Ceiling((double)marks.Length / blockCount);
+            }
+                
 
                 InitializeComponent();
             

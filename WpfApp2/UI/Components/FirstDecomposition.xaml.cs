@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Forms;
 using System.Drawing;
+using WpfApp2.Utils;
 
 namespace WpfApp2.UI.Components
 {
@@ -78,12 +79,12 @@ namespace WpfApp2.UI.Components
 
             chart.Series.Clear();
 
-            styleChart();
+            ChartHelper.styleChart(chart);
 
-            Series mSeries = constructSeries("Фазовая траектория");
-            Series mPSeries = constructSeries("Нижний предел");
-            Series mMSeries = constructSeries("Верхний предел");
-            Series mPredictSeries = constructSeries("Прогнозируемая траектория");
+            Series mSeries = ChartHelper.constructSeries("Фазовая траектория", chart);
+            Series mPSeries = ChartHelper.constructSeries("Нижний предел", chart);
+            Series mMSeries = ChartHelper.constructSeries("Верхний предел", chart);
+            Series mPredictSeries = ChartHelper.constructSeries("Прогнозируемая траектория", chart);
 
             
 
@@ -115,34 +116,13 @@ namespace WpfApp2.UI.Components
         }
 
         DataPoint constructDataPoint(double x, double y) {
-            var dp = new DataPoint(x, y);
-            dp.IsValueShownAsLabel = true;
-            dp.MarkerSize = 8;
-            dp.LabelForeColor = Color.FromArgb(185, 185, 185); 
-            dp.ToolTip = string.Format("M: {0}, Alpha: {1}", x, y);
-            dp.Label = "#INDEX";
-
+            var dp = ChartHelper.constructDataPoint(x, y);
             if (x > chartMax)
                 chartMax = x;
             else if (x < chartMin)
                 chartMin = x;
 
             return dp;
-        }
-
-        Series constructSeries(string name) {
-            Chart chart = this.FindName("MyWinformChart") as Chart;
-
-            Series ser = new Series(name);
-            ser.ChartType = SeriesChartType.Spline;
-            ser.ChartArea = chart.ChartAreas[0].Name;
-            ser.Legend = "legend1";
-            ser.XValueMember = "М";
-            ser.YValueMembers = "Alpha";
-
-            ser.MarkerStyle = MarkerStyle.Circle;
-
-            return ser;
         }
         
         void buildTable()
@@ -197,10 +177,6 @@ namespace WpfApp2.UI.Components
                     true
                     ));
 
-            
-
-
-
 
         }
 
@@ -240,38 +216,6 @@ namespace WpfApp2.UI.Components
 
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-
-        /// <summary>
-        /// Настраивает график согласно нашему стилю (да, да, костыль, но другого выбора нет)
-        /// </summary>
-        void styleChart()
-        {
-            Chart chart = this.FindName("MyWinformChart") as Chart;
-
-            Color fcolor = Color.FromArgb(185, 185, 185);
-
-            chart.ChartAreas[0].AxisX.LineColor = fcolor;
-            chart.ChartAreas[0].AxisX.Title = "M";
-            chart.ChartAreas[0].AxisX.TitleForeColor = fcolor;
-            chart.ChartAreas[0].AxisX.LabelStyle.Format = "#.#####";
-            chart.ChartAreas[0].AxisX.IsMarginVisible = false;
-            chart.ChartAreas[0].AxisX.MajorGrid.LineColor = fcolor;
-            chart.ChartAreas[0].AxisX.LabelStyle.ForeColor = fcolor;
-
-            chart.ChartAreas[0].AxisY.LineColor = fcolor;
-            chart.ChartAreas[0].AxisY.Title = "Alpha''";
-            chart.ChartAreas[0].AxisY.TitleForeColor = fcolor;
-            chart.ChartAreas[0].AxisY.LabelStyle.Format = "#.#####";
-            chart.ChartAreas[0].AxisY.IsMarginVisible = false;
-            chart.ChartAreas[0].AxisY.MajorGrid.LineColor = fcolor;
-            chart.ChartAreas[0].AxisY.LabelStyle.ForeColor = fcolor;
-
-        }
 
 
     }

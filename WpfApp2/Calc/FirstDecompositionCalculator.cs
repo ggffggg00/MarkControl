@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Collections.Generic;
 using WpfApp2.DB.Models;
-using System.Windows;
 
 namespace WpfApp2.Calc {
 
@@ -14,6 +10,7 @@ namespace WpfApp2.Calc {
     /// </summary>
     class FirstDecompositionCalculator
     {
+        #region Поля
         /// <summary>
         /// Хранит в себе данные о проекте
         /// </summary>
@@ -24,6 +21,9 @@ namespace WpfApp2.Calc {
         /// </summary>
         int[] marksToCalculate;
 
+        #endregion
+
+        #region Конструкторы
         /// <summary>
         /// Создает экземпляр калькулятора для дальнейших расчётов
         /// </summary>
@@ -38,14 +38,18 @@ namespace WpfApp2.Calc {
             else
                 this.marksToCalculate = marksToCalculate;
 
-        }
+        } 
+        #endregion
+
+        #region Публичные методы
 
         /// <summary>
         /// Вычисляет фазовое занчение М
         /// </summary>
         /// <param name="epochIndex">Индекс эпохи, в которой проводится расчёт</param>
         /// <returns></returns>
-        public double calculateM(int epochIndex) {
+        public double calculateM(int epochIndex)
+        {
             return (M(epochIndex, 0, 1));
         }
 
@@ -54,7 +58,8 @@ namespace WpfApp2.Calc {
         /// </summary>
         /// <param name="epochIndex">Индекс эпохи, в которой проводится расчёт</param>
         /// <returns></returns>
-        public double calculateM_plus(int epochIndex){
+        public double calculateM_plus(int epochIndex)
+        {
             return (M(epochIndex, data.eAccuracy, 1));
         }
 
@@ -75,7 +80,7 @@ namespace WpfApp2.Calc {
         /// <returns></returns>
         public double calculateAlpha(int epochIndex)
         {
-            return alpha(H1xH0(epochIndex),calculateM(0),calculateM(epochIndex));
+            return alpha(H1xH0(epochIndex), calculateM(0), calculateM(epochIndex));
         }
 
         /// <summary>
@@ -98,29 +103,6 @@ namespace WpfApp2.Calc {
             return (alpha(H1xH0(epochIndex, data.eAccuracy, -1), calculateM_minus(0), calculateM_minus(epochIndex)));
         }
 
-        
-        private double stabilityTheory(int epochIndex)
-        {
-            return  Math.Abs( calculateM_plus(epochIndex) - calculateM_minus(epochIndex) );
-        }
-
-        private double stabilityPractice(int epochIndex)
-        {
-            return Math.Abs(M(epochIndex) - M(0));
-        }
-
-
-        /// <summary>
-        /// Проверяет, стабилен ли объект на проверяемой эпохе
-        /// </summary>
-        /// <param name="epochIndex">Индекс эпохи, в которой проводится расчёт</param>
-        /// <returns>Возвращает логический флаг стабилен объект или нет</returns>
-        public bool hasStable(int epochIndex)
-        {
-            return stabilityTheory(epochIndex) >= stabilityPractice(epochIndex);
-        }
-
-
         /// <summary>
         /// Подсчитывает превышение высот марок
         /// </summary>
@@ -132,7 +114,7 @@ namespace WpfApp2.Calc {
         {
             double result = 0;
 
-            foreach(int markIndex in marksToCalculate)
+            foreach (int markIndex in marksToCalculate)
             {
                 double zeroVal = data.marks[0].marks[markIndex];
                 double epochVal = data.marks[epochIndex].marks[markIndex];
@@ -142,49 +124,11 @@ namespace WpfApp2.Calc {
             return result;
         }
 
-
-
         /// <summary>
-        /// Внутренняя функция для подсчета М, М+, М-. 
+        /// Подсчет прогнозного значения М
         /// </summary>
-        /// <param name="epochIndex"> принимает порядковый номер эпохи, в рамках которой происходит рассчет (Обязательный параметр) </param>
-        /// <param name="accuracy"> принимает значение точности Е. При нуле рассчитывает М. </param>
-        /// <param name="direction"> принимает значение направления вычислений М+ и М-. При значении 1 возвращает М+, при -1 возвращает М- </param>
-        /// <returns> Величина тректории для заданной эпохи </returns>        
-        private double M(int epochIndex, double accuracy = 0, int direction = 1)
-        {
-            double result = 0;
-
-            foreach (int markIndex in marksToCalculate)
-            {
-                double epochVal = data.marks[epochIndex].marks[markIndex];
-                result += (epochVal + (accuracy * direction)) * (epochVal + (accuracy * direction));
-            }
-
-            return Math.Sqrt(result);
-        }
-
-        /// <summary>
-        /// Вычисляет значение угла вращения объекта по заданным переменным и переводит в угловые секунды
-        /// </summary>
-        /// <param name="H"> Превышение высот </param>
-        /// <param name="M0"> Фазовое значенеи траектории в нулевой эпохе </param>
-        /// <param name="M"> Фазовое значенеи траектории</param>
-        /// <returns>Угол вращения в секундах</returns>
-        private double alpha(double H, double M0, double M)
-        {
-
-            double alpha = Math.Acos((H / (M0 * M)) >= 1 ? 1 : (H / (M0 * M)));
-
-            return (alpha * (3600 * 180) / Math.PI);
-
-        }
-
-        /// <summary>
-        /// Вычисляет прогнозное значение траектории в указанной эпохе
-        /// </summary>
-        /// <param name="epochIndex">Индекс эпохи для которой производится расчёт</param>
-        /// <returns>Прогнозное значение траектории в заданной эпохе</returns>
+        /// <param name="epochIndex">Индекс эпохи, в которой проводится расчёт</param>
+        /// <returns>Расчитанное значение М pr</returns>
         public double calculateMPredict(int epochIndex)
         {
             double a = data.aAccuracy;
@@ -250,6 +194,65 @@ namespace WpfApp2.Calc {
         }
 
         /// <summary>
+        /// Проверяет, стабилен ли объект на проверяемой эпохе
+        /// </summary>
+        /// <param name="epochIndex">Индекс эпохи, в которой проводится расчёт</param>
+        /// <returns>Возвращает логический флаг стабилен объект или нет</returns>
+        public bool hasStable(int epochIndex)
+        {
+            return stabilityTheory(epochIndex) >= stabilityPractice(epochIndex);
+        }
+
+        #endregion
+
+        #region Вспомогательные методы
+        private double stabilityTheory(int epochIndex)
+        {
+            return Math.Abs(calculateM_plus(epochIndex) - calculateM_minus(epochIndex));
+        }
+
+        private double stabilityPractice(int epochIndex)
+        {
+            return Math.Abs(M(epochIndex) - M(0));
+        }
+
+        /// <summary>
+        /// Внутренняя функция для подсчета М, М+, М-. 
+        /// </summary>
+        /// <param name="epochIndex"> принимает порядковый номер эпохи, в рамках которой происходит рассчет (Обязательный параметр) </param>
+        /// <param name="accuracy"> принимает значение точности Е. При нуле рассчитывает М. </param>
+        /// <param name="direction"> принимает значение направления вычислений М+ и М-. При значении 1 возвращает М+, при -1 возвращает М- </param>
+        /// <returns> Величина тректории для заданной эпохи </returns>        
+        private double M(int epochIndex, double accuracy = 0, int direction = 1)
+        {
+            double result = 0;
+
+            foreach (int markIndex in marksToCalculate)
+            {
+                double epochVal = data.marks[epochIndex].marks[markIndex];
+                result += (epochVal + (accuracy * direction)) * (epochVal + (accuracy * direction));
+            }
+
+            return Math.Sqrt(result);
+        }
+
+        /// <summary>
+        /// Вычисляет значение угла вращения объекта по заданным переменным и переводит в угловые секунды
+        /// </summary>
+        /// <param name="H"> Превышение высот </param>
+        /// <param name="M0"> Фазовое значенеи траектории в нулевой эпохе </param>
+        /// <param name="M"> Фазовое значенеи траектории</param>
+        /// <returns>Угол вращения в секундах</returns>
+        private double alpha(double H, double M0, double M)
+        {
+
+            double alpha = Math.Acos((H / (M0 * M)) >= 1 ? 1 : (H / (M0 * M)));
+
+            return (alpha * (3600 * 180) / Math.PI);
+
+        }
+
+        /// <summary>
         /// Вычисляет среднее арифметическое значение фазовой траектории 
         /// </summary>
         /// <returns> Среднее арифмитическое значение фазовой траектории </returns>
@@ -259,7 +262,7 @@ namespace WpfApp2.Calc {
             double sum = 0;
             for (int index = 0; index < data.epochCount; index++)
             {
-                 sum += calculateM(index);
+                sum += calculateM(index);
                 counter++;
             }
 
@@ -277,6 +280,7 @@ namespace WpfApp2.Calc {
                 sum += calculateAlpha(index);
 
             return sum / data.marks.Count;
-        }
+        } 
+        #endregion
     }
 }

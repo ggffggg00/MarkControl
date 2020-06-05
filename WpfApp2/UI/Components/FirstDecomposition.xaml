@@ -10,7 +10,7 @@ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
     xmlns:winformchart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
              mc:Ignorable="d" 
              Margin="-3,0,0,0"
-             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a" Loaded="UserControl_Loaded">
+             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a">
 
 
     <UserControl.Resources>

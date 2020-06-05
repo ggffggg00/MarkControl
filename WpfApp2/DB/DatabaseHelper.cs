@@ -26,8 +26,6 @@ public class ProjectShortEntry
 
 }
 
-
-
 public class DatabaseHelper
 {
     private const string FILE_PATH = "./markdb.db";

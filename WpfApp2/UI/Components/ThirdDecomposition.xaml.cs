@@ -129,6 +129,7 @@ namespace WpfApp2.UI.Components
         public void onDataChanged(DataChangedEventArgs e)
         {
             updateUI();
+            tbc.SelectedIndex = 0;
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
@@ -261,6 +262,8 @@ namespace WpfApp2.UI.Components
             showImage();
             updateGraph();
             showOrUpdateChart();
+
+            NetCountIndicator.Content = string.Format("Достаточное количество связей: {0}", calc.EdgeCountForSolidBlock());
         }
     }
 }

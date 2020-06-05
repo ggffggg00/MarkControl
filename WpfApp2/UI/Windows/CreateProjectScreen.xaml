@@ -20,13 +20,14 @@
             <Label Content="Количество блоков" Foreground="#FFD2D9E2" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" HorizontalAlignment="Left" Width="129" Height="23" VerticalAlignment="Top" Padding="2,5,0,5" Margin="0,0,0,5"/>
             <TextBox x:Name="BlockCountField" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="224" Background="#FF414857" Foreground="#FFC9D0D9" VerticalScrollBarVisibility="Disabled" BorderThickness="0" Padding="0,2,0,0" TextChanged="TitleField_TextChanged"/>
         </StackPanel>
-        <StackPanel Margin="20,255,0,0" Orientation="Vertical" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="224">
+        <StackPanel Margin="20,255,0,0" Orientation="Vertical" Height="83" VerticalAlignment="Top" HorizontalAlignment="Left" Width="224">
             <Label Content="Изображение плана (.png)" Foreground="#FFD2D9E2" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" HorizontalAlignment="Left" Width="192" Height="23" VerticalAlignment="Top" Padding="2,5,0,5" Margin="0,0,0,5"/>
             <Button Content="Выбрать изображение" Background="#FF1E2127" Foreground="#FFB3B9C3" BorderThickness="0" Height="25" HorizontalAlignment="Left" Width="147" Click="Button_Click_1"/>
+            <Button Content="Распределить марки" Background="#FF1E2127" Foreground="#FFB3B9C3" BorderThickness="0" Height="25" HorizontalAlignment="Left" Width="147" Margin="0,5,0,5" Click="Button_Click_3" />
         </StackPanel>
         <Button Content="Создать проект" Background="#FF2F343F" Foreground="#FFB3B9C3" BorderThickness="0" HorizontalAlignment="Right" Width="147" Margin="0,0,10,10" BorderBrush="{x:Null}" Click="Button_Click" Height="43" VerticalAlignment="Bottom"/>
         <Button Content="Отменить" Background="#FF2F343F" Foreground="#FFB3B9C3" BorderThickness="0" HorizontalAlignment="Right" Width="147" Margin="0,0,162,10" BorderBrush="{x:Null}" Click="Button_Click_2" Height="43" VerticalAlignment="Bottom"/>
-        <Image x:Name="ImagePreview" HorizontalAlignment="Left" Height="255" Margin="264,60,0,0" VerticalAlignment="Top" Width="316"/>
+        <Image x:Name="ImagePreview" HorizontalAlignment="Left" Height="255" Margin="239,60,0,0" VerticalAlignment="Top" Width="327"/>
         <StackPanel x:Name="MSP" Height="249" Margin="0,60,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="187">
             <Label Content="Распределение по блокам" Foreground="#FFD2D9E2" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" Height="23" VerticalAlignment="Top" Padding="2,5,0,5" Margin="0,5"/>
             <ListView x:Name="LV" BorderThickness="0" Background="#FF393F4C" Height="215">
@@ -47,8 +48,7 @@
         </StackPanel>
         <Label  Foreground="#FF98A0AA" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" Padding="2,5,0,5" Margin="20,0,0,10" FontSize="11" HorizontalAlignment="Left" Width="266" Height="32" VerticalAlignment="Bottom" >
             <TextBlock TextWrapping="WrapWithOverflow" FontSize="9">
-                После выбора изображения будет открыто диалоговое окно для распределения марок по блокам
-
+                Для создания проекта необходимо заполнить все поля, выбрать изображение плана и распределить марки
             </TextBlock>
         </Label>
     </Grid>

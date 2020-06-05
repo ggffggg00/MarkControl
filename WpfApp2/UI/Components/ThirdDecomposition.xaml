@@ -58,8 +58,8 @@
 
 
 
-        <TabControl Margin="0,0,0,0" Background="#22252a" BorderThickness="0">
-            <TabItem Foreground="#d3dae3" Header="Проверка связей">
+        <TabControl Margin="0,0,0,0" Background="#22252a" x:Name="tbc" BorderThickness="0">
+            <TabItem Foreground="#d3dae3" Header="Проверка связей" FontSize="12">
                 <Grid Background="#22252a">
 
                     <Grid.RowDefinitions>
@@ -67,7 +67,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel x:Name="GetStartedIndicator" Grid.Row="0">
+                    <StackPanel x:Name="GetStartedIndicator" Margin="5,10,0,0" Grid.Row="0">
                         <Label  Content="Давайте начнем" FontSize="24" Style="{StaticResource LargeLabel}" />    
                         <Label  Content="Выберите целевой блок для начала разбора" Style="{StaticResource LargeLabel}" FontSize="12" Foreground="#FF939FAE" />    
                     </StackPanel>
@@ -155,7 +155,7 @@
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Header="Декомпозиция" Foreground="#d3dae3" x:Name="DecompositionTab" Visibility="Hidden">
+            <TabItem Header="Декомпозиция" Foreground="#d3dae3" FontSize="12" x:Name="DecompositionTab" Visibility="Hidden">
                 <Grid Background="#22252a">
                     <ContentControl x:Name="cc" Content=""/>
                 </Grid>
@@ -220,6 +220,7 @@
                 <StackPanel Margin="0">
                     <Label  Content="Граф связей" Style="{StaticResource LargeLabel}" />
                     <Graphite:GraphCanvas x:Name="diagram" Margin="0,0,0,0" Height="130"/>
+                    <Label x:Name="NetCountIndicator" Content="Достаточное число связей: 3" FontSize="12" Style="{StaticResource LargeLabel}" />
                 </StackPanel>
             </Border>
 

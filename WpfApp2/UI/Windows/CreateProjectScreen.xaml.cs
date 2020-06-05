@@ -1,103 +1,161 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using WpfApp2.DB.Models;
 using WpfApp2.UI.Windows;
 
 namespace WpfApp2
 {
-
-    public struct ProjectInitialData
-    {
-        public string title;
-        public string markCount;
-        public string blockCount;
-        public string imagePath;
-        public JObject metaData;
-
-    }
-    
-
+    /// <summary>
+    /// Окно создания проекта. Отображается в виде диалога и возвращает результат
+    ///     Если проект успешно создан - True;
+    ///     Если проект создать не удалось - False;
+    ///     
+    ///     При успешном создании проекта в поле insertedId записывается идентификатор созданного проекта
+    /// </summary>
     public partial class CreateProjectScreen : Window
     {
+
+        #region Поля
+        /// <summary>
+        /// Хранилище данных проекта
+        /// </summary>
         private DatabaseHelper DBHelper;
-        public ProjectInitialData data;
-        bool fieldsEmpty = true;
 
-        ObservableCollection<string> BlockList { get; set; }
+        /// <summary>
+        /// Переменная для хранения и проверки вводимых пользователем данных
+        /// </summary>
+        public ProjectInitialData InitialData;
 
+        /// <summary>
+        /// Идентификатор созданного проекта.
+        /// После создания проекта сюда записывается идентификатор созданного проекта,
+        /// только потом закрывается окно. Главное окно после закрытия проверяет этот идентификатор.
+        /// Если идентификатор присвоен, загружает данные и отображает главное окно
+        /// </summary>
         public long insertedId { get; set; } = 0;
+        #endregion
 
-
+        #region Конструктор
         public CreateProjectScreen(DatabaseHelper DBHelper)
         {
             this.DBHelper = DBHelper;
-            this.data = new ProjectInitialData();
+            this.InitialData = new ProjectInitialData();
             InitializeComponent();
-            this.data.metaData = new JObject();
-            this.data.metaData["blockData"] = new JObject();
-            this.BlockList = new ObservableCollection<string>();
-            this.LV.DataContext = BlockList;
-            this.LV.ItemsSource = BlockList;
+
             this.MSP.Visibility = Visibility.Collapsed;
         }
+        #endregion
 
+        #region Обработчики событий
 
+        //Кнопка распределения марок по блокам
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            SortMarksInBlocks();
+        }
 
+        //Кнопка создания проекта
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
 
-            if (fieldsEmpty)
+            //Проверяем, все ли данные (кроме блоков) были введены. В противном случае выводим ошибку
+            if (!InitialData.hasFullyInfo())
             {
-                showAlert(@"Заполните все поля");
+                showAlert(@"Не все поля заполнены или не прикреплено изображение");
                 return;
             }
 
-            if (data.imagePath == null)
+            //Получаем ошибку в данных. Если она есть, то будет записан ее текст. В противном случае будет присвоен NULL
+            string error = InitialData.checkDataValid();
+
+            //Проверяем, есть ли ошибка. Если есть, отображаем ее и выходим из функции
+            if (error != null)
             {
-                showAlert(@"Загрузите изображение, содердащее план объекта");
+                showAlert(error);
                 return;
             }
 
+            //Выполняем запрос к БД на создание проекта и записываем в переменную идентификатор созданного проекта
+            this.insertedId = new CreateProjectRequest(DBHelper, InitialData).execute();
+            //Выполняем запрос в БД на создание таблицы для проекта
+            new CreateProjectTableRequest(DBHelper, insertedId, Int32.Parse(InitialData.markCount)).execute();
 
-
-
-            this.insertedId = new CreateProjectRequest(DBHelper, data).execute();
+            //Завершаем работу диалога с положительным результатом
             this.DialogResult = true;
-            new CreateProjectTableRequest(DBHelper, insertedId, Int32.Parse(data.markCount)).execute();
             this.Close();
-
         }
 
-        private void showAlert(string msg)
+        //кнопка отмены
+        private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(msg, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //Завершаем работу диалога с отрицательным результатом
+            this.DialogResult = false;
+            this.Close();
         }
-
 
         //Кнопка выбора изображения
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
+            //Настраиваем диалог открытия файла 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".png";
             dlg.Filter = "Изображение (.png)|*.png";
             dlg.Multiselect = false;
 
+            //Открываем диалог и получаем его результат
             Nullable<bool> result = dlg.ShowDialog();
 
+            //Если результат положительный, то записываем путь к файлу и показываем изображение
             if (result == true)
             {
-                this.data.imagePath = dlg.FileName;
-                loadPreview(this.data.imagePath);
-                SortMarksInBlocks();
+                this.InitialData.imagePath = dlg.FileName;
+                loadPreview(this.InitialData.imagePath);
             }
 
         }
 
+
+        //При изменении текста записывает значения в объект данных
+        private void TitleField_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            //Обрабатываем исключение. Оно появится, если данные не заполнены
+            try
+            {
+                this.InitialData.title = TitleField.Text;
+                this.InitialData.markCount = MarkCountField.Text;
+                this.InitialData.blockCount = BlockCountField.Text;
+            }
+            catch (NullReferenceException ex)
+            {
+            }
+        }
+
+        //Позволяет перетаскивать окно за любую его часть
+        private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
+
+        #endregion
+
+        #region Вспомогательные методы
+        /// <summary>
+        /// Показывает предупреждающее сообщение
+        /// </summary>
+        /// <param name="msg">Сообщение для вывода</param>
+        private void showAlert(string msg)
+        {
+            MessageBox.Show(msg, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        /// <summary>
+        /// Отображает схему фундамента
+        /// </summary>
+        /// <param name="path">Путь к файлу изображения</param>
         private void loadPreview(string path)
         {
             BitmapImage bi3 = new BitmapImage();
@@ -108,72 +166,53 @@ namespace WpfApp2
         }
 
 
-        //кнопка отмены
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-            this.Close();
-        }
-
+        /// <summary>
+        /// Запускает процесс распределения блоков. Обрабатывает возможные ошибки
+        /// </summary>
         private void SortMarksInBlocks()
         {
-            if (fieldsEmpty)
+            //Получаем возможную ошибку при заполнении данных
+            string error = InitialData.checkDataValid(false);
+
+            //Если ошибка есть, выводим ее и выходим из функции
+            if (error != null)
             {
-                showAlert(@"Заполните все поля");
+                showAlert(error);
                 return;
             }
 
-            int bc = Int32.Parse(data.blockCount);
-            int mc = Int32.Parse(data.markCount);          
+            //Перегоняем строки в числа
+            int bc = Int32.Parse(InitialData.blockCount);
+            int mc = Int32.Parse(InitialData.markCount);
 
-            int marksPerBlock = mc / bc;
+            //Читаем массив байтов из файла изображения
+            byte[] imgBytes = File.ReadAllBytes(InitialData.imagePath);
 
-            JArray arr = new JArray();
+            //Создаем диалог распределения марок
+            BlockInputFormDialog dlg = new BlockInputFormDialog(bc, mc, imgBytes);
 
-            for (int i = 1; i <= bc; i++)
+            //Если результат диалога НЕ положительный, то показываем сообщение и выходим
+            if (dlg.ShowDialog() != true)
             {
-                string blockName = ((char)(64 + i)).ToString();
-                var dialog = new BlockInputDialog(marksPerBlock, mc,blockName);
-                if (dialog.ShowDialog() == true)
-                {
-                    var blockObj = new JObject();
-                    blockObj.Add("blockName", blockName);
-                    blockObj.Add("marks", JArray.FromObject(dialog.marks));
-                    arr.Add(blockObj);
-
-                    string ints = string.Join(", ", dialog.marks);
-
-                    BlockList.Add("Блок " + blockName + ": " + ints);
-                    this.MSP.Visibility = Visibility.Visible;
-                    this.Width = 768;
-
-                } else {
-                    MessageBox.Show("Вы отменили распределение марок по блокам");
-                    this.BlockList.Clear();
-                    return;
-                }
+                showAlert("Вы отменили распределение марок по блокам");
+                return;
             }
-            this.data.metaData["blockData"] = arr;
+
+            //Меняем ширину окна чтобы список поместился и делаем список видимым
+            this.MSP.Visibility = Visibility.Visible;
+            this.Width = 768;
+
+            //Добавляем информацию о распределении блоков
+            InitialData.addBlockInfo(dlg.Result);
+
+            //Заполняем в цикле список блоков
+            foreach (BlockObject obj in dlg.Result)
+                LV.Items.Add(obj.ToString());
 
         }
 
-        private void TitleField_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            try
-            {
-                this.data.title = TitleField.Text;
-                this.data.markCount = MarkCountField.Text;
-                this.data.blockCount = BlockCountField.Text;
-                this.fieldsEmpty = false;
-            } catch (NullReferenceException ex) {
-                this.fieldsEmpty = true;
-            }
-        }
+        #endregion
 
-        private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-                this.DragMove();
-        }
+        
     }
 }

@@ -10,7 +10,7 @@ using WpfApp2.DB.Models;
 
 namespace WpfApp2.Calc
 {
-    #region Модель даных блока
+    #region Производные классы
     class BlockData
     {
         public string Name { get; }
@@ -48,12 +48,42 @@ namespace WpfApp2.Calc
 
 
     }
+
+    /// <summary>
+    /// Реализовывает хранение в таблице значения ячейки и ее цвета
+    /// </summary>
+    public class ColoredDataGridCell
+    {
+        public object Value { get; set; }
+        public Brush Color { get; set; }
+
+        public ColoredDataGridCell(object value, Brush color)
+        {
+            Value = value;
+            Color = color;
+        }
+
+        public ColoredDataGridCell() { }
+
+        public override string ToString() => Value.ToString();
+
+    }
     #endregion
 
+    /// <summary>
+    /// Класс для рассчетов и проверки связей между подблоками
+    /// </summary>
     class NetCalculator
     {
         #region Поля
+        /// <summary>
+        /// Хранилище данных проекта
+        /// </summary>
         private ProjectData ProjectData { get; }
+
+        /// <summary>
+        /// Ячейка для хранения данных о связях текущего блока
+        /// </summary>
         public BlockData CurrentBlockData { get; set; }
         #endregion
 
@@ -65,93 +95,52 @@ namespace WpfApp2.Calc
         }
         #endregion
 
-        private BlockData parseBlock (BlockObject block)
-        {
-
-            return new BlockData(
-                block.blockName,
-                block.marks);
-        }
-
-        int EdgesCount()
-        {
-            return (CurrentBlockData.Count * (CurrentBlockData.Count - 1)) / 2;
-        }
-
-        int EdgeCountForSolidBlock()
-        {
-            return 3 * CurrentBlockData.Count - 6;
-        }
-
+        #region Публичные методы
 
         /// <summary>
-        /// Метод рассчитывает разницу между марками,индекс которых передан в параметры
+        /// Проверяет, является ли связь абсолютно твердой
         /// </summary>
-        /// <param name="from"> Индекс марки начала </param>
-        /// <param name="to"> Индекс марки конца </param>
-        /// <param name="epoch"> Рассматриваемая эпоха </param>
-        /// <returns> Разница между марками </returns>
-        double calculateMarkDifference(int from, int to, int epoch) {
-            return ProjectData.marks[epoch].marks[from] - ProjectData.marks[epoch].marks[to];
-        }
-
-        /// <summary>
-        /// Возвращает ответ, не превышает ли разница между разницами марок допустимую ошибку
-        /// </summary>
-        /// <param name="difference"> Разница </param>
-        /// <returns></returns>
-        bool hasSingleEdgeSolid(double difference) {
-            return ProjectData.eAccuracy >= Math.Abs(difference);
-        }
-
-        public bool hasEdgeSolid(KeyValuePair<int,int> edgeIndexes)
+        /// <param name="edgeIndexes">Пара индексов рассматриваемых марок марок</param>
+        /// <returns>Твердая ли связь</returns>
+        public bool hasEdgeSolid(KeyValuePair<int, int> edgeIndexes)
         {
             int success = 0, failed = 0;
-            foreach(int epoch in Enumerable.Range(0, ProjectData.epochCount))
+            foreach (int epoch in Enumerable.Range(0, ProjectData.epochCount))
             {
                 bool isSolid = hasSingleEdgeSolid(calculateEdgeDifference(CurrentBlockData.Marks[edgeIndexes.Key], CurrentBlockData.Marks[edgeIndexes.Value], epoch));
                 if (isSolid)
                     success++;
-                else failed++;
+                else
+                    failed++;
             }
 
-
-            return success>failed;
+            return success > failed;
         }
 
-        double calculateEdgeDifference(int from, int to, int epoch)
+        /// <summary>
+        /// Возвращает количество возможных связей в блоке
+        /// Рассчитывается согласно формуле
+        /// </summary>
+        /// <returns>Количество возможных связей в блоке</returns>
+        public int EdgesCount()
         {
-            return calculateMarkDifference(from,to,epoch) - calculateMarkDifference(from, to, 0);
+            return (CurrentBlockData.Count * (CurrentBlockData.Count - 1)) / 2;
         }
 
-
-
-
-        public class ColoredDataGridCell
+        /// <summary>
+        /// Возвращает достаточное количество абсолютно твердых связей
+        /// Рассчитывается согласно формуле
+        /// </summary>
+        /// <returns></returns>
+        public int EdgeCountForSolidBlock()
         {
-            public object Value { get; set; }
-            public Brush Color { get; set; }
-
-            public ColoredDataGridCell(object value, Brush color)
-            {
-                Value = value;
-                Color = color;
-            }
-
-            public ColoredDataGridCell()
-            {
-            }
-
-            public override string ToString()
-            {
-                return Value.ToString();
-            }
-
-
-            // public override string ToString() => Value.ToString();
-
+            return 3 * CurrentBlockData.Count - 6;
         }
 
+        /// <summary>
+        /// Генерирует таблицу данных для отображения
+        /// </summary>
+        /// <returns>Таблица данных</returns>
         public DataTable generateEdgeDifferencetable()
         {
             var data = new DataTable();
@@ -166,7 +155,7 @@ namespace WpfApp2.Calc
                 col.DataType = new ColoredDataGridCell().GetType();
                 data.Columns.Add(col);
             }
-                
+
 
             foreach (int epoch in Enumerable.Range(0, ProjectData.epochCount))
             {
@@ -180,7 +169,7 @@ namespace WpfApp2.Calc
                 foreach (KeyValuePair<int, int> edge in CurrentBlockData.Edges)
                 {
                     Brush backColor = hasSingleEdgeSolid(calculateEdgeDifference(edge.Key, edge.Value, epoch)) ? Brushes.DarkGreen : Brushes.DarkRed;
-                    dt[i++] = new ColoredDataGridCell(calculateEdgeDifference(edge.Key, edge.Value, epoch), backColor); 
+                    dt[i++] = new ColoredDataGridCell(calculateEdgeDifference(edge.Key, edge.Value, epoch), backColor);
                 }
 
                 data.Rows.Add(dt);
@@ -188,9 +177,59 @@ namespace WpfApp2.Calc
             }
 
             return data;
-            
+
+        }
+        #endregion
+
+        #region Вспомогательные методы
+        /// <summary>
+        /// Метод позволяет разобрать блок на внутренний тип данных для блока для возможности хранения информации о связях
+        /// </summary>
+        /// <param name="block">Экземпляр блока</param>
+        /// <returns></returns>
+        private BlockData parseBlock(BlockObject block)
+        {
+
+            return new BlockData(
+                block.blockName,
+                block.marks);
         }
 
+        /// <summary>
+        /// Метод рассчитывает разницу между марками,индекс которых передан в параметры
+        /// </summary>
+        /// <param name="from"> Индекс марки начала </param>
+        /// <param name="to"> Индекс марки конца </param>
+        /// <param name="epoch"> Рассматриваемая эпоха </param>
+        /// <returns>Разница между марками</returns>
+        double calculateMarkDifference(int from, int to, int epoch)
+        {
+            return ProjectData.marks[epoch].marks[from] - ProjectData.marks[epoch].marks[to];
+        }
+
+        /// <summary>
+        /// Возвращает ответ, не превышает ли разница между разницами марок допустимую ошибку
+        /// </summary>
+        /// <param name="difference"> Разница </param>
+        /// <returns>Входит ли связь в допуск</returns>
+        bool hasSingleEdgeSolid(double difference)
+        {
+            return ProjectData.eAccuracy >= Math.Abs(difference);
+        }
+
+        /// <summary>
+        /// Рассчитывает разницу между разницей марки в эпохе и разницей марки в нулевой эпохе
+        /// </summary>
+        /// <param name="from">Связь ИЗ</param>
+        /// <param name="to">Связь В</param>
+        /// <param name="epoch">Индекс эпохи</param>
+        /// <returns></returns>
+        double calculateEdgeDifference(int from, int to, int epoch)
+        {
+            return calculateMarkDifference(from, to, epoch) - calculateMarkDifference(from, to, 0);
+        }
+
+        #endregion
 
     }
 }

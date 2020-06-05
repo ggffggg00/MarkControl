@@ -224,6 +224,7 @@ namespace WpfApp2.UI.Components
             }
         }
 
+        #region Настройка графика
         //++++++++++++++МЕТОДЫ КОНФИГУРАЦИИ ГРАФИКА++++++++++++++++
 
         /// <summary>
@@ -291,6 +292,7 @@ namespace WpfApp2.UI.Components
             return ser;
         }
 
+        #endregion
 
     }
 }
