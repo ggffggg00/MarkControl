@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="598.5" Width="1053.5" ResizeMode="CanResizeWithGrip" Background="#FF2F343F" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" MinHeight="598.5" MinWidth="1053.5" Height="598.5" Width="1053.5" ResizeMode="CanResizeWithGrip" Background="#FF2F343F" WindowStartupLocation="CenterScreen">
 
 
     <Window.Resources>

@@ -24,6 +24,7 @@ namespace WpfApp2.UI.Components
         DatabaseHelper db;
         ProjectData data;
         bool isUpToDate = true;
+        bool hasEmpty = true;
 
         ObservableCollection<string> BlockList { get; set; }
 
@@ -142,7 +143,7 @@ namespace WpfApp2.UI.Components
         void setEmpty(bool isEmpty) {
             this.dtGrid.Visibility = isEmpty ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
             this.emptyLabels.Visibility = !isEmpty ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
-        
+            hasEmpty = isEmpty;
         }
 
 
@@ -170,6 +171,9 @@ namespace WpfApp2.UI.Components
 
         private void Button_Click_2(object sender, System.Windows.RoutedEventArgs e)
         {
+            if (hasEmpty)
+                return;
+
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Значения марок (*.csv)|*.csv";
             saveFileDialog.CheckPathExists = true;
@@ -181,6 +185,9 @@ namespace WpfApp2.UI.Components
 
         private void Button_Click_3(object sender, System.Windows.RoutedEventArgs e)
         {
+            if (hasEmpty)
+                return;
+
             var isSaved = data.SaveAllData(db);
             if ( isSaved )
                 notifyOnDataChanged(true);
@@ -198,6 +205,8 @@ namespace WpfApp2.UI.Components
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            if (hasEmpty)
+                return;
 
             data.eAccuracy = double.Parse(eac.Text);
             data.aAccuracy = double.Parse(acoef.Text);

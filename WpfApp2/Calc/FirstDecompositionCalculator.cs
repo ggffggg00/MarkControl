@@ -248,7 +248,7 @@ namespace WpfApp2.Calc {
 
             double alpha = Math.Acos((H / (M0 * M)) >= 1 ? 1 : (H / (M0 * M)));
 
-            return (alpha * (3600 * 180) / Math.PI);
+            return Math.Round(alpha * (3600 * 180) / Math.PI, 1);
 
         }
 

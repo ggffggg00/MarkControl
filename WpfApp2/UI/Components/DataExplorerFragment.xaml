@@ -150,6 +150,11 @@
                     </GroupBox>
                     <GroupBox Grid.Column="1" Header="Распределение марок" HorizontalAlignment="Right" Foreground="#FF8B9EB5" BorderThickness="0.5" Width="237" Margin="0,0,0,5">
                         <ListView x:Name="LV" BorderThickness="0" Background="#FF22252A">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Focusable" Value="false"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="5">
