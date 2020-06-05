@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WpfApp2.UI.Windows;
 
@@ -167,6 +168,12 @@ namespace WpfApp2
             } catch (NullReferenceException ex) {
                 this.fieldsEmpty = true;
             }
+        }
+
+        private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
     }
 }

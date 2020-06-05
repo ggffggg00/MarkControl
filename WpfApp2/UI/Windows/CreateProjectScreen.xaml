@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2"
-        mc:Ignorable="d" Height="382" ResizeMode="NoResize" Background="#FF2F343F" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderThickness="1" BorderBrush="#FFD2D9E2" Width="597">
+        mc:Ignorable="d" Height="382" ResizeMode="NoResize" Background="#FF2F343F" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderThickness="1" BorderBrush="#FFD2D9E2" Width="597" MouseDown="Window_MouseDown">
     <Grid>
         <Label Content="Создание нового проекта" Margin="20,10,0,0" Foreground="#FFD2D9E2" FontSize="16" FontFamily="Gotham Pro Light" RenderTransformOrigin="0.502,0.54" HorizontalAlignment="Left" Width="230" Height="28" VerticalAlignment="Top" Padding="0,5,5,5"/>
         <Separator Height="10" Margin="0,42,0,0" VerticalAlignment="Top"/>

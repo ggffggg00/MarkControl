@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2"
-        mc:Ignorable="d" Height="400" Width="722" ResizeMode="NoResize" Background="#FF2F343F" WindowStyle="None" WindowStartupLocation="CenterScreen">
+        mc:Ignorable="d" Height="400" Width="722" ResizeMode="NoResize" Background="#FF2F343F" WindowStyle="None" WindowStartupLocation="CenterScreen" MouseDown="Window_MouseDown_1">
     <Grid>
         <Grid x:Name="MainGrid" Margin="204,10,10,10">
             <Grid.RowDefinitions>

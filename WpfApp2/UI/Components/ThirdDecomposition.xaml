@@ -10,7 +10,7 @@
              xmlns:Graphite="clr-namespace:Orbifold.Graphite;assembly=Orbifold.Graphite"
              mc:Ignorable="d" 
              Margin="-3,0,0,0"
-             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a" Loaded="UserControl_Loaded">
+             d:DesignHeight="538" d:DesignWidth="871" Background="#22252a">
 
     <UserControl.Resources>
         <Style TargetType="Label" x:Key="LargeLabel">
@@ -67,7 +67,12 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Border Grid.Row="0" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+                    <StackPanel x:Name="GetStartedIndicator" Grid.Row="0">
+                        <Label  Content="Давайте начнем" FontSize="24" Style="{StaticResource LargeLabel}" />    
+                        <Label  Content="Выберите целевой блок для начала разбора" Style="{StaticResource LargeLabel}" FontSize="12" Foreground="#FF939FAE" />    
+                    </StackPanel>
+
+                    <Border x:Name="tableContainer" Grid.Row="0" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
                         <DataGrid 
                         
                         x:Name="dtGrid"
@@ -134,10 +139,10 @@
 
                         </DataGrid>
                     </Border>
-                    <Border Grid.Row="1" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+                    <Border x:Name="chartContainer" Grid.Row="1" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
 
-                        <WindowsFormsHost x:Name="host" Background="#22252A" Margin="0,0,0,0">
-                            <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" Height="180" BackColor="#FF2F343F">
+                        <WindowsFormsHost x:Name="host" Background="#22252a" Margin="0,0,0,0">
+                            <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" Height="180" BackColor="#22252a">
                                 <winformchart:Chart.ChartAreas>
                                     <winformchart:ChartArea BackColor="#FF2F343F" Name="График"/>
                                 </winformchart:Chart.ChartAreas>
@@ -150,7 +155,7 @@
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Header="Декомпозиция" Foreground="#d3dae3" x:Name="DecompositionTab" Visibility="Visible">
+            <TabItem Header="Декомпозиция" Foreground="#d3dae3" x:Name="DecompositionTab" Visibility="Hidden">
                 <Grid Background="#22252a">
                     <ContentControl x:Name="cc" Content=""/>
                 </Grid>
@@ -160,7 +165,21 @@
         <GridSplitter Width="3" Margin="0,0,5,0" Grid.Column="1" VerticalAlignment="Stretch" ShowsPreview="False" HorizontalAlignment="Center" Background="#FF2F343F" />
 
         <StackPanel Grid.Column="2" Background="#FF2F343F">
-            <Border BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
+            <Border BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
+                <StackPanel Margin="0">
+                    <Label  Content="Выбор блока" Style="{StaticResource LargeLabel}" />
+                    <ComboBox x:Name="cmbb"  Margin="5,5,0,0" Height="23"   BorderBrush="{x:Null}" VerticalAlignment="Top" SelectionChanged="cmbb_SelectionChanged">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="Background" Value="#41416a"/>
+                                <Setter Property="BorderBrush" Value="#41416a"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                </StackPanel>
+            </Border>
+            <Border x:Name="sp1" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Padding="5">
                 <StackPanel Margin="0"  >
                     <Label  Content="Разбор на подблоки" Style="{StaticResource LargeLabel}" />
                     <Grid Height="29">
@@ -168,7 +187,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="SubBlocksCountField" Grid.Column="0" Height="24" TextWrapping="Wrap" Foreground="#FFA0B9D6" Background="#FF22252A" BorderBrush="#FF393F4C" SelectionBrush="#FF41416A" VerticalAlignment="Center" Padding="5,0" HorizontalAlignment="Left" Margin="0,0,0,5" PreviewTextInput="TextBox_PreviewTextInput" HorizontalContentAlignment="Stretch" Width="164"/>
+                        <TextBox x:Name="SubBlocksCountField" Grid.Column="0" Height="24" TextWrapping="Wrap" Foreground="#FFA0B9D6" Background="#FF22252A" BorderBrush="#FF393F4C" SelectionBrush="#FF41416A" VerticalAlignment="Center" Padding="5,0" Margin="0,0,5,5" PreviewTextInput="TextBox_PreviewTextInput" HorizontalContentAlignment="Stretch"/>
                         <Button Grid.Column="1" Style="{StaticResource ButtonStyle}" Content="Разобрать"  VerticalAlignment="Bottom" Padding="10" Margin="0,0,5,5" Width="95" Height="24" HorizontalAlignment="Right" Click="Button_Click_4"/>
                     </Grid>
                     <ListView x:Name="LV" BorderThickness="0" Background="#FF2F343F" Height="Auto" SelectionChanged="LV_SelectionChanged">
@@ -197,19 +216,14 @@
                     </ListView>
                 </StackPanel>
             </Border>
-            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
+            <Border x:Name="sp2" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
                 <StackPanel Margin="0">
                     <Label  Content="Граф связей" Style="{StaticResource LargeLabel}" />
                     <Graphite:GraphCanvas x:Name="diagram" Margin="0,0,0,0" Height="130"/>
                 </StackPanel>
             </Border>
-            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
-                <StackPanel Margin="0">
-                    <Label  Content="График фазовых значений" Style="{StaticResource LargeLabel}" />
 
-                </StackPanel>
-            </Border>
-            <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,5"  Height="Auto" Padding="5">
+            <Border x:Name="sp3" BorderBrush="#FF393F4C" BorderThickness="1" Margin="5,5,5,5"  Height="Auto" Padding="5">
                 <Image  RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" x:Name="img" Height="Auto" ></Image>
             </Border>
         </StackPanel>

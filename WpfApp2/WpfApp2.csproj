@@ -147,15 +147,19 @@
     <Compile Include="Calc\NetCalculator.cs" />
     <Compile Include="DB\DatabaseHelper.cs" />
     <Compile Include="DB\ImportExportManager.cs" />
+    <Compile Include="DB\Models\BlockObject.cs" />
     <Compile Include="DB\Models\DataChangedEventArgs.cs" />
     <Compile Include="DB\Models\ProjectData.cs" />
     <Compile Include="Calc\FirstDecompositionCalculator.cs" />
-    <Compile Include="UI\Components\AbstractFragment.cs" />
+    <Compile Include="UI\Components\DataUpdateNotifier.cs" />
     <Compile Include="UI\Components\DataExplorerFragment.xaml.cs">
       <DependentUpon>DataExplorerFragment.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Components\FirstDecomposition.xaml.cs">
       <DependentUpon>FirstDecomposition.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\FourthDecomposition.xaml.cs">
+      <DependentUpon>FourthDecomposition.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Components\SecondDecoposition.xaml.cs">
       <DependentUpon>SecondDecoposition.xaml</DependentUpon>
@@ -163,7 +167,6 @@
     <Compile Include="UI\Components\ThirdDecomposition.xaml.cs">
       <DependentUpon>ThirdDecomposition.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Components\UnorderedLineSeries.cs" />
     <Compile Include="UI\Windows\BlockInputDialog.xaml.cs">
       <DependentUpon>BlockInputDialog.xaml</DependentUpon>
     </Compile>
@@ -177,11 +180,16 @@
       <DependentUpon>CreateProjectScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Components\DataRowViewConverter.cs" />
+    <Compile Include="Utils\ChartHelper.cs" />
     <Page Include="UI\Components\DataExplorerFragment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Components\FirstDecomposition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Components\FourthDecomposition.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -281,9 +289,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utils\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.112.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.112.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

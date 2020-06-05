@@ -60,7 +60,8 @@ namespace WpfApp2
 
             registerNotifierComponent("Декомпозиция 1 ур.", new FirstDecomposition(projectData));
             registerNotifierComponent("Декомпозиция 2 ур.", new SecondDecoposition(projectData));
-            registerNotifierComponent("Декомпозиция 3 ур.", new ThirdDecomposition(projectData, "A"));
+            registerNotifierComponent("Декомпозиция 3 ур.", new ThirdDecomposition(projectData));
+            registerNotifierComponent("Декомпозиция 4 ур.", new FourthDecomposition(projectData));
 
             isComponentsRegistered = true;
         }
@@ -140,7 +141,6 @@ namespace WpfApp2
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
             tabControl.Items.Clear();
             tabControl.InvalidateVisual();
             Window1 win = new Window1();

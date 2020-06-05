@@ -58,26 +58,19 @@ namespace WpfApp2.Calc
         #endregion
 
         #region Конструктор
-        public NetCalculator(ProjectData data, string currentBlock)
+        public NetCalculator(ProjectData data, BlockObject currentBlock)
         {
             this.ProjectData = data;
             this.CurrentBlockData = parseBlock(currentBlock);
         }
         #endregion
 
-        private BlockData parseBlock (string name)
+        private BlockData parseBlock (BlockObject block)
         {
-            JObject bd = null;
 
-            for (int i = 0; i < ProjectData.markInBlockOrder.Count; i++)
-                if ((string)ProjectData.markInBlockOrder[i]["blockName"] == name)
-                    bd = (JObject)ProjectData.markInBlockOrder[i];
-
-            var marksArray = (JArray)bd["marks"];
-            var marks = marksArray.Select(jv => (int)jv).ToArray();
             return new BlockData(
-                (string)bd["blockName"],
-                marks);
+                block.blockName,
+                block.marks);
         }
 
         int EdgesCount()

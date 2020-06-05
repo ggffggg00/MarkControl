@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using WpfApp2.DB.Models;
 
 namespace WpfApp2.UI.Windows
 {
@@ -16,22 +17,7 @@ namespace WpfApp2.UI.Windows
     public partial class BlockInputFormDialog : Window
     {
 
-        public class BlockObject
-        {
-            public string blockName { get; set; }
-            public int[] marks { get; set; }
-
-            public BlockObject(string blockName, int[] marks)
-            {
-                this.blockName = blockName;
-                this.marks = marks;
-            }
-
-            public override string ToString()
-            {
-                return "Блок " + this.blockName + ": " + String.Join(", ", this.marks);
-            }
-        }
+       
         public List<BlockObject> Result { get; set; }
 
         int maxMarksPerBlock;

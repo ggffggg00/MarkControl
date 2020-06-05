@@ -30,7 +30,7 @@ namespace WpfApp2.UI.Components
         public bool IsChecked { get; set; }
         public string Text { get; set; }
 
-        public CheckBoxListViewItem(string text,bool isChecked = true)
+        public CheckBoxListViewItem(string text, bool isChecked = true)
         {
             IsChecked = isChecked;
             Text = text;

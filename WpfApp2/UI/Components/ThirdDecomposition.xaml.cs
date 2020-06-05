@@ -2,9 +2,7 @@
 using Orbifold.Graphite;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +13,7 @@ using System.Windows.Media.Imaging;
 using WpfApp2.Calc;
 using WpfApp2.DB.Models;
 using WpfApp2.UI.Windows;
-using static WpfApp2.UI.Windows.BlockInputFormDialog;
+using WpfApp2.Utils;
 
 namespace WpfApp2.UI.Components
 {
@@ -24,36 +22,33 @@ namespace WpfApp2.UI.Components
     /// </summary>
     /// 
 
-    
-
-
     public partial class ThirdDecomposition : UserControl, DataChangeNotifier
     {
         ProjectData data;
         NetCalculator calc;
-        string BlockName;
-        List<BlockObject> blocksInfo = new List<BlockObject>();
+        BlockObject parentBlock;
+
+        List<BlockObject> subBlockList = new List<BlockObject>();
         DataChangeNotifier decompositionContentDelegate;
 
-        public ThirdDecomposition(ProjectData data, string BlockName)
+        public ThirdDecomposition(ProjectData data)
         {
             this.data = data;
 
             InitializeComponent();
+            fillCombobox();
 
-            if (BlockName == null)
-                throw new ArgumentNullException("Имя блока не может отсутствовать");
+            //UpdateUI();
+            getStarted(true);
 
-            this.BlockName = BlockName;
+        }
 
-            calc = new NetCalculator(data, BlockName);
 
-            var table = calc.generateEdgeDifferencetable();
-
-            dtGrid.ItemsSource = table.DefaultView;
-            showImage();
-            updateGraph();
-
+        void fillCombobox()
+        {
+            cmbb.Items.Clear();
+            foreach (JObject obj in data.markInBlockOrder)
+                cmbb.Items.Add(BlockObject.FromJson(obj).ToString());
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -67,33 +62,12 @@ namespace WpfApp2.UI.Components
         }
 
         /// <summary>
-        /// Возвращает массив марок по имени блока
-        /// </summary>
-        int[] getBlockMarks(string blockName)
-        {
-
-            foreach (JObject obj in data.markInBlockOrder)
-            {
-                var currName = ((string)obj["blockName"]);
-
-                if (currName == blockName)
-                {
-                    var marksArray = (JArray)obj["marks"];
-                    return marksArray.Select(jv => (int)jv).ToArray();
-                }
-            }
-
-            return null;
-        }
-
-
-        /// <summary>
         /// Загружает список блоков с чекбоксами для графика
         /// </summary>
         void initBlocksList()
         {
             LV.Items.Clear();
-            foreach (BlockObject blData in blocksInfo)
+            foreach (BlockObject blData in subBlockList)
                 LV.Items.Add(new CheckBoxListViewItem(blData.ToString()));
         }
 
@@ -154,23 +128,12 @@ namespace WpfApp2.UI.Components
 
         public void onDataChanged(DataChangedEventArgs e)
         {
-            //throw new NotImplementedException();
-        }
-
-        private void dtGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-          
-            
+            updateUI();
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            int[] marksInBlock = getBlockMarks(BlockName);
+            int[] marksInBlock = parentBlock.marks;
             int blockCount;
 
             if (!Int32.TryParse(SubBlocksCountField.Text, out blockCount))
@@ -191,9 +154,9 @@ namespace WpfApp2.UI.Components
                 return;
 
             LV.UnselectAll();
-            blocksInfo.Clear();
+            subBlockList.Clear();
 
-            blocksInfo.AddRange(dlg.Result);
+            subBlockList.AddRange(dlg.Result);
             initBlocksList();
             showOrUpdateChart();
 
@@ -211,17 +174,21 @@ namespace WpfApp2.UI.Components
 
             chart.Series.Clear();
 
-            styleChart();
+            ChartHelper.styleChart(chart);
 
-            for (int x = 0; x < blocksInfo.Count; x++)
+            for (int x = 0; x < subBlockList.Count; x++)
             {
 
-                Series ser = constructSeries(blocksInfo[x].blockName);
+                Series ser = ChartHelper.constructSeries(subBlockList[x].blockName, chart);
 
-                FirstDecompositionCalculator calc = new FirstDecompositionCalculator(data, blocksInfo[x].marks);
+                FirstDecompositionCalculator calc = new FirstDecompositionCalculator(data, subBlockList[x].marks);
 
                 for (int i = 0; i < data.epochCount; i++)
-                    ser.Points.Add(constructDataPoint(calc.calculateM(i), calc.calculateAlpha(i)));
+                {
+                    DataPoint point = ChartHelper.constructDataPoint(calc.calculateM(i), calc.calculateAlpha(i));
+                    ser.Points.Add(point);
+                }
+                    
 
                 ser.Enabled = ((CheckBoxListViewItem)LV.Items[x]).IsChecked;
 
@@ -232,75 +199,6 @@ namespace WpfApp2.UI.Components
             chart.Refresh();
 
         }
-
-        //++++++++++++++МЕТОДЫ КОНФИГУРАЦИИ ГРАФИКА++++++++++++++++
-
-        /// <summary>
-        /// Настраивает график согласно нашему стилю (да, да, костыль, но другого выбора нет)
-        /// </summary>
-        void styleChart()
-        {
-            Chart chart = this.FindName("MyWinformChart") as Chart;
-
-            System.Drawing.Color fcolor = System.Drawing.Color.FromArgb(185, 185, 185);
-
-            chart.ChartAreas[0].AxisX.LineColor = fcolor;
-            chart.ChartAreas[0].AxisX.Title = "M";
-            chart.ChartAreas[0].AxisX.TitleForeColor = fcolor;
-            chart.ChartAreas[0].AxisX.LabelStyle.Format = "#.#####";
-            chart.ChartAreas[0].AxisX.IsMarginVisible = false;
-            chart.ChartAreas[0].AxisX.MajorGrid.LineColor = fcolor;
-            chart.ChartAreas[0].AxisX.LabelStyle.ForeColor = fcolor;
-
-            chart.ChartAreas[0].AxisY.LineColor = fcolor;
-            chart.ChartAreas[0].AxisY.Title = "Alpha''";
-            chart.ChartAreas[0].AxisY.TitleForeColor = fcolor;
-            chart.ChartAreas[0].AxisY.LabelStyle.Format = "#.#####";
-            chart.ChartAreas[0].AxisY.IsMarginVisible = false;
-            chart.ChartAreas[0].AxisY.MajorGrid.LineColor = fcolor;
-            chart.ChartAreas[0].AxisY.LabelStyle.ForeColor = fcolor;
-
-        }
-
-        /// <summary>
-        /// Возвразает стилизованную точку графика
-        /// </summary>
-        /// <param name="x">Значение оси Х</param>
-        /// <param name="y">Значение оси У</param>
-        /// <returns>Точка данных для добавления в серию</returns>
-        DataPoint constructDataPoint(double x, double y)
-        {
-            var dp = new DataPoint(x, y);
-            dp.IsValueShownAsLabel = true;
-            dp.MarkerSize = 5;
-            dp.LabelForeColor = System.Drawing.Color.FromArgb(185, 185, 185);
-            dp.ToolTip = string.Format("M: {0}, Alpha: {1}", x, y);
-            dp.Label = "#INDEX";
-
-            return dp;
-        }
-
-        /// <summary>
-        /// Создает стилизованный и настроенный объект серии
-        /// </summary>
-        /// <param name="name">Название серии</param>
-        /// <returns>Экземпляр серии для добавления в график</returns>
-        Series constructSeries(string name)
-        {
-            Chart chart = this.FindName("MyWinformChart") as Chart;
-
-            Series ser = new Series(name);
-            ser.ChartType = SeriesChartType.Spline;
-            ser.ChartArea = chart.ChartAreas[0].Name;
-            ser.Legend = "legend1";
-            ser.XValueMember = "М";
-            ser.YValueMembers = "Alpha";
-
-            ser.MarkerStyle = MarkerStyle.Circle;
-
-            return ser;
-        }
-
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
@@ -317,7 +215,52 @@ namespace WpfApp2.UI.Components
             if (LV.SelectedIndex == -1)
                 return;
 
-            showBlockDecomposition(blocksInfo[LV.SelectedIndex].marks);
+            showBlockDecomposition(subBlockList[LV.SelectedIndex].marks);
+        }
+
+        private void cmbb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            int selectedIndex = (sender as ComboBox).SelectedIndex;
+            if (selectedIndex < 0)
+                return;
+
+            parentBlock = BlockObject.FromJson(data.markInBlockOrder[selectedIndex] as JObject);
+
+            updateUI();
+        }
+
+        void getStarted(bool hasStart)
+        {
+            Visibility visReversed = hasStart ? Visibility.Hidden : Visibility.Visible;
+            Visibility vis = !hasStart ? Visibility.Hidden : Visibility.Visible;
+
+            tableContainer.Visibility = visReversed;
+            chartContainer.Visibility = visReversed;
+            GetStartedIndicator.Visibility = vis;
+            sp1.Visibility = visReversed;
+            sp2.Visibility = visReversed;
+            sp3.Visibility = visReversed;
+        }
+
+
+        private void updateUI()
+        {
+            if (parentBlock == null)
+                return;
+
+            getStarted(false);
+            calc = new NetCalculator(data, parentBlock);
+
+            var table = calc.generateEdgeDifferencetable();
+
+            dtGrid.ItemsSource = table.DefaultView;
+            subBlockList.Clear();
+            LV.Items.Clear();
+            DecompositionTab.Visibility = Visibility.Hidden;
+            showImage();
+            updateGraph();
+            showOrUpdateChart();
         }
     }
 }
