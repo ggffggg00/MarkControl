@@ -19,6 +19,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfApp2.Calc;
 using WpfApp2.DB.Models;
+using WpfApp2.Utils;
 
 namespace WpfApp2.UI.Components
 {
@@ -50,6 +51,10 @@ namespace WpfApp2.UI.Components
         /// </summary>
         DataChangeNotifier decompositionContentDelegate;
 
+        double chartMin = 100500;
+        double chartMax = 0;
+        double scaleCoef = 0.1;
+
         public SecondDecoposition(ProjectData data)
         {
             this.data = data;
@@ -68,31 +73,39 @@ namespace WpfApp2.UI.Components
         private void showOrUpdateChart()
         {
 
+            chartMin = 100500;
+            chartMax = 0;
+
             Chart chart = this.FindName("MyWinformChart") as Chart;
 
             chart.Series.Clear();
 
-            styleChart();
+            ChartHelper.styleChart(chart);
 
             for (int x = 0; x < data.markInBlockOrder.Count; x++)
             {
 
+                if (!((CheckBoxListViewItem)LV.Items[x]).IsChecked)
+                    continue;
+
                 JObject block = (JObject)data.markInBlockOrder[x];
 
-
                 string blname = (string)block["blockName"];
-                Series ser = constructSeries(blname);
+                Series ser = ChartHelper.constructSeries(blname, chart);
 
                 FirstDecompositionCalculator calc = new FirstDecompositionCalculator(data, getBlockMarks(blname));
 
                 for (int i = 0; i < data.epochCount; i++)
                     ser.Points.Add(constructDataPoint(calc.calculateM(i), calc.calculateAlpha(i)));
 
-                ser.Enabled = ((CheckBoxListViewItem)LV.Items[x]).IsChecked;
-
                 chart.Series.Add(ser);
                    
             }
+
+            double scaleOffset = (chartMax - chartMin) * scaleCoef;
+
+            chart.ChartAreas[0].AxisX.Maximum = chartMax + scaleOffset;
+            chart.ChartAreas[0].AxisX.Minimum = chartMin - scaleOffset;
 
             chart.Refresh();
 
@@ -214,44 +227,11 @@ namespace WpfApp2.UI.Components
         /// <param name="e"></param>
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            for (int x = 0; x < LV.Items.Count; x++)
-            {
-                var du = (CheckBoxListViewItem)LV.Items[x];
-                Chart chart = this.FindName("MyWinformChart") as Chart;
-                chart.Series[x].Enabled = du.IsChecked;
-
-
-            }
+            showOrUpdateChart();
         }
 
         #region Настройка графика
         //++++++++++++++МЕТОДЫ КОНФИГУРАЦИИ ГРАФИКА++++++++++++++++
-
-        /// <summary>
-        /// Настраивает график согласно нашему стилю (да, да, костыль, но другого выбора нет)
-        /// </summary>
-        void styleChart() {
-            Chart chart = this.FindName("MyWinformChart") as Chart;
-
-            Color fcolor = Color.FromArgb(185, 185, 185);
-
-            chart.ChartAreas[0].AxisX.LineColor = fcolor;
-            chart.ChartAreas[0].AxisX.Title = "M";
-            chart.ChartAreas[0].AxisX.TitleForeColor = fcolor;
-            chart.ChartAreas[0].AxisX.LabelStyle.Format = "#.#####";
-            chart.ChartAreas[0].AxisX.IsMarginVisible = false;
-            chart.ChartAreas[0].AxisX.MajorGrid.LineColor = fcolor;
-            chart.ChartAreas[0].AxisX.LabelStyle.ForeColor = fcolor;
-
-            chart.ChartAreas[0].AxisY.LineColor = fcolor;
-            chart.ChartAreas[0].AxisY.Title = "Alpha''";
-            chart.ChartAreas[0].AxisY.TitleForeColor = fcolor;
-            chart.ChartAreas[0].AxisY.LabelStyle.Format = "#.#####";
-            chart.ChartAreas[0].AxisY.IsMarginVisible = false;
-            chart.ChartAreas[0].AxisY.MajorGrid.LineColor = fcolor;
-            chart.ChartAreas[0].AxisY.LabelStyle.ForeColor = fcolor;
-
-        }
 
         /// <summary>
         /// Возвразает стилизованную точку графика
@@ -261,35 +241,13 @@ namespace WpfApp2.UI.Components
         /// <returns>Точка данных для добавления в серию</returns>
         DataPoint constructDataPoint(double x, double y)
         {
-            var dp = new DataPoint(x, y);
-            dp.IsValueShownAsLabel = true;
-            dp.MarkerSize = 5;
-            dp.LabelForeColor = Color.FromArgb(185, 185, 185);
-            dp.ToolTip = string.Format("M: {0}, Alpha: {1}", x, y);
-            dp.Label = "#INDEX";
+            var dp = ChartHelper.constructDataPoint(x, y);
+            if (x > chartMax)
+                chartMax = x;
+            if (x < chartMin)
+                chartMin = x;
 
             return dp;
-        }
-
-        /// <summary>
-        /// Создает стилизованный и настроенный объект серии
-        /// </summary>
-        /// <param name="name">Название серии</param>
-        /// <returns>Экземпляр серии для добавления в график</returns>
-        Series constructSeries(string name)
-        {
-            Chart chart = this.FindName("MyWinformChart") as Chart;
-
-            Series ser = new Series(name);
-            ser.ChartType = SeriesChartType.Spline;
-            ser.ChartArea = chart.ChartAreas[0].Name;
-            ser.Legend = "legend1";
-            ser.XValueMember = "М";
-            ser.YValueMembers = "Alpha";
-
-            ser.MarkerStyle = MarkerStyle.Circle;
-
-            return ser;
         }
 
         #endregion

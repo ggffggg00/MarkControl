@@ -24,6 +24,11 @@ namespace WpfApp2.UI.Components
 
     public partial class ThirdDecomposition : UserControl, DataChangeNotifier
     {
+
+        double chartMin = 100500;
+        double chartMax = 0;
+        double scaleCoef = 0.1;
+
         ProjectData data;
         NetCalculator calc;
         BlockObject parentBlock;
@@ -170,6 +175,8 @@ namespace WpfApp2.UI.Components
         /// </summary>
         private void showOrUpdateChart()
         {
+            chartMin = 100500;
+            chartMax = 0;
 
             Chart chart = this.FindName("MyWinformChart") as Chart;
 
@@ -180,18 +187,23 @@ namespace WpfApp2.UI.Components
             for (int x = 0; x < subBlockList.Count; x++)
             {
 
+                if (!((CheckBoxListViewItem)LV.Items[x]).IsChecked)
+                    continue;
+
                 Series ser = ChartHelper.constructSeries(subBlockList[x].blockName, chart);
 
                 FirstDecompositionCalculator calc = new FirstDecompositionCalculator(data, subBlockList[x].marks);
 
                 for (int i = 0; i < data.epochCount; i++)
                 {
-                    DataPoint point = ChartHelper.constructDataPoint(calc.calculateM(i), calc.calculateAlpha(i));
+                    DataPoint point = constructDataPoint(calc.calculateM(i), calc.calculateAlpha(i));
                     ser.Points.Add(point);
                 }
-                    
 
-                ser.Enabled = ((CheckBoxListViewItem)LV.Items[x]).IsChecked;
+                double scaleOffset = (chartMax - chartMin) * scaleCoef;
+
+                chart.ChartAreas[0].AxisX.Maximum = chartMax + scaleOffset;
+                chart.ChartAreas[0].AxisX.Minimum = chartMin - scaleOffset;
 
                 chart.Series.Add(ser);
 
@@ -201,14 +213,26 @@ namespace WpfApp2.UI.Components
 
         }
 
+        /// <summary>
+        /// Возвразает стилизованную точку графика
+        /// </summary>
+        /// <param name="x">Значение оси Х</param>
+        /// <param name="y">Значение оси У</param>
+        /// <returns>Точка данных для добавления в серию</returns>
+        DataPoint constructDataPoint(double x, double y)
+        {
+            var dp = ChartHelper.constructDataPoint(x, y);
+            if (x > chartMax)
+                chartMax = x;
+            if (x < chartMin)
+                chartMin = x;
+
+            return dp;
+        }
+
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            for (int x = 0; x < LV.Items.Count; x++)
-            {
-                var du = (CheckBoxListViewItem)LV.Items[x];
-                Chart chart = this.FindName("MyWinformChart") as Chart;
-                chart.Series[x].Enabled = du.IsChecked;
-            }
+            showOrUpdateChart();
         }
 
         private void LV_SelectionChanged(object sender, SelectionChangedEventArgs e)

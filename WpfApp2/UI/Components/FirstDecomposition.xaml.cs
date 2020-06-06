@@ -86,29 +86,34 @@ namespace WpfApp2.UI.Components
             Series mMSeries = ChartHelper.constructSeries("Верхний предел", chart);
             Series mPredictSeries = ChartHelper.constructSeries("Прогнозируемая траектория", chart);
 
-                chart.Series.Add(mSeries);
-                chart.Series.Add(mPSeries);
-                chart.Series.Add(mMSeries);
-                chart.Series.Add(mPredictSeries);
-
-
-
             for (int i = 0; i<data.epochCount; i++)
             {
-                    chart.Series[0].Points.Add(constructDataPoint(calc.calculateM(i), calc.calculateAlpha(i)));
-                    chart.Series[1].Points.Add(constructDataPoint(calc.calculateM_plus(i), calc.calculateAlpha_plus(i)));
-                    chart.Series[2].Points.Add(constructDataPoint(calc.calculateM_minus(i), calc.calculateAlpha_minus(i)));
-                    chart.Series[3].Points.Add(constructDataPoint(calc.calculateMPredict(i), calc.calculateAlphaPredict(i)));
+                if(mCheckbox.IsChecked == true)
+                    mSeries.Points.Add(constructDataPoint(calc.calculateM(i), calc.calculateAlpha(i)));
+                if (mPCheckbox.IsChecked == true)
+                    mPSeries.Points.Add(constructDataPoint(calc.calculateM_plus(i), calc.calculateAlpha_plus(i)));
+                if (mMCheckbox.IsChecked == true)
+                    mMSeries.Points.Add(constructDataPoint(calc.calculateM_minus(i), calc.calculateAlpha_minus(i)));
+                if (mPredictCheckbox.IsChecked == true)
+                    mPredictSeries.Points.Add(constructDataPoint(calc.calculateMPredict(i), calc.calculateAlphaPredict(i)));
                 
             }
 
-            chart.Refresh();
-            mCheckbox_Click(null, null);
+            if (mCheckbox.IsChecked == true)
+                chart.Series.Add(mSeries);
+            if (mPCheckbox.IsChecked == true)
+                chart.Series.Add(mPSeries);
+            if (mMCheckbox.IsChecked == true)
+                chart.Series.Add(mMSeries);
+            if (mPredictCheckbox.IsChecked == true)
+                chart.Series.Add(mPredictSeries);
 
             double scaleOffset = (chartMax - chartMin) * scaleCoef;
 
             chart.ChartAreas[0].AxisX.Maximum = chartMax + scaleOffset;
             chart.ChartAreas[0].AxisX.Minimum = chartMin - scaleOffset;
+
+            chart.Refresh();
 
 
         }
@@ -117,7 +122,7 @@ namespace WpfApp2.UI.Components
             var dp = ChartHelper.constructDataPoint(x, y);
             if (x > chartMax)
                 chartMax = x;
-            else if (x < chartMin)
+            if (x < chartMin)
                 chartMin = x;
 
             return dp;
@@ -206,15 +211,8 @@ namespace WpfApp2.UI.Components
 
         private void mCheckbox_Click(object sender, RoutedEventArgs e)
         {
-            Chart chart = this.FindName("MyWinformChart") as Chart;
-            chart.Series[0].Enabled = (bool)mCheckbox.IsChecked;
-            chart.Series[1].Enabled = (bool)mPCheckbox.IsChecked;
-            chart.Series[2].Enabled = (bool)mMCheckbox.IsChecked;
-            chart.Series[3].Enabled = (bool)mPredictCheckbox.IsChecked;
-
+            showOrUpdateChart();
         }
-
-
 
     }
 }
