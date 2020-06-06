@@ -145,12 +145,6 @@ namespace WpfApp2.UI.Components
             this.emptyLabels.Visibility = !isEmpty ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
             hasEmpty = isEmpty;
         }
-
-
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            //notifyOnDataChanged();
-        }
         
         //Импорт значений
         private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)

@@ -133,8 +133,6 @@ namespace WpfApp2.Calc {
         {
             double a = data.aAccuracy;
 
-
-
             if (epochIndex == 0)
             {
                 double avgM = averageM();
@@ -192,6 +190,8 @@ namespace WpfApp2.Calc {
                 throw new InvalidOperationException("Пытаемся посчитать то, что считать не надо");
 
         }
+
+
 
         /// <summary>
         /// Проверяет, стабилен ли объект на проверяемой эпохе
@@ -251,6 +251,8 @@ namespace WpfApp2.Calc {
             return Math.Round(alpha * (3600 * 180) / Math.PI, 1);
 
         }
+
+
 
         /// <summary>
         /// Вычисляет среднее арифметическое значение фазовой траектории 

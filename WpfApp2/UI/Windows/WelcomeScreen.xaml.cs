@@ -19,7 +19,9 @@ namespace WpfApp2
         {
             this.database = new DatabaseHelper();
             list = new ProjectsListRequest(database).execute();
+
             InitializeComponent();
+
             this.ProjectList.ItemsSource = list;
             if (list.Count == 0)
                 this.minifyProjectsList();
@@ -46,7 +48,6 @@ namespace WpfApp2
             MainWindow main = new MainWindow(this.database, (int)projectId);
             main.Show();
             this.Close();
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

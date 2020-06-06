@@ -147,10 +147,6 @@ namespace WpfApp2.DB.Models
                 row.addMark(markIndex, predictMarkValue(markIndex));
 
             this.marks.Add(row);
-
-
-            
-
         }
 
         private double randomDouble(double max = 0, double min = 0) {

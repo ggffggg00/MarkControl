@@ -86,8 +86,6 @@ namespace WpfApp2.UI.Components
             Series mMSeries = ChartHelper.constructSeries("Верхний предел", chart);
             Series mPredictSeries = ChartHelper.constructSeries("Прогнозируемая траектория", chart);
 
-            
-
                 chart.Series.Add(mSeries);
                 chart.Series.Add(mPSeries);
                 chart.Series.Add(mMSeries);
