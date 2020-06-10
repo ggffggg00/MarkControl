@@ -117,7 +117,6 @@ namespace WpfApp2
 
         }
 
-
         //При изменении текста записывает значения в объект данных
         private void TitleField_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {

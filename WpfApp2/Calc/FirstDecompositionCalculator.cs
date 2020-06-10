@@ -4,7 +4,6 @@ using WpfApp2.DB.Models;
 
 namespace WpfApp2.Calc {
 
-    
     /// <summary>
     /// Класс реализующий все необходимые расчёты для первого и второго уровней декомпозиции
     /// </summary>
@@ -60,7 +59,7 @@ namespace WpfApp2.Calc {
         /// <returns></returns>
         public double calculateM_plus(int epochIndex)
         {
-            return (M(epochIndex, data.eAccuracy, 1));
+            return M(epochIndex, data.eAccuracy, 1);
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace WpfApp2.Calc {
         /// <returns></returns>
         public double calculateM_minus(int epochIndex)
         {
-            return (M(epochIndex, data.eAccuracy, -1));
+            return M(epochIndex, data.eAccuracy, -1);
         }
 
         /// <summary>
@@ -246,13 +245,13 @@ namespace WpfApp2.Calc {
         private double alpha(double H, double M0, double M)
         {
 
-            double alpha = Math.Acos((H / (M0 * M)) >= 1 ? 1 : (H / (M0 * M)));
+            double arg = H / (M0 * M);
+
+            double alpha = Math.Acos( arg >= 1 ? 1 : arg);
 
             return Math.Round(alpha * (3600 * 180) / Math.PI, 1);
 
         }
-
-
 
         /// <summary>
         /// Вычисляет среднее арифметическое значение фазовой траектории 

@@ -52,7 +52,6 @@ public class DatabaseHelper
 
     }
 
-
     private void firstInitialize()
     {
         string query = " CREATE TABLE \"projects\" (\"id\"	INTEGER NOT NULL UNIQUE,\"name\"	TEXT NOT NULL,\"mark_count\"	INTEGER NOT NULL,\"image\"	TEXT NOT NULL,\"block_count\"	INTEGER NOT NULL, \"meta\"	TEXT NOT NULL DEFAULT '{}', PRIMARY KEY(\"id\")); ";

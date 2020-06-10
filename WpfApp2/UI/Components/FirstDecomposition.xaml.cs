@@ -58,7 +58,6 @@ namespace WpfApp2.UI.Components
         double chartMax = 0;
         double scaleCoef = 0.1;
 
-
         public FirstDecomposition(ProjectData data, int[] marksToCalculate = null)
         {
             this.data = data;
