@@ -37,7 +37,30 @@
 
 
                 </Button>
-                <Button Content="Выход" Margin="30,34,30,0" VerticalAlignment="Top" Foreground="#FFC1C8D0" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Center" FontSize="14" Width="166" Height="29" Click="Button_Click_1">
+                <Button Content="Выход" Margin="30,68,30,0" VerticalAlignment="Top" Foreground="#FFC1C8D0" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Center" FontSize="14" Width="166" Height="29" Click="Button_Click_1">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#FF2F343F"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF4B5364"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+
+                </Button>
+                <Button Content="Помощь" Margin="30,34,31,0" VerticalAlignment="Top" Foreground="#FFC1C8D0" HorizontalContentAlignment="Center" Padding="10" BorderThickness="0" HorizontalAlignment="Center" FontSize="14" Width="165" Height="29" Click="Button_Click_2">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
                             <Setter Property="Background" Value="#FF2F343F"/>
