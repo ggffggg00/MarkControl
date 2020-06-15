@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WpfApp2.DB;
 using WpfApp2.DB.Models;
+using WpfApp2.Utils;
 
 namespace WpfApp2.UI.Components
 {

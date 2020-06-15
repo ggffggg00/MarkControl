@@ -147,6 +147,9 @@
     <Compile Include="DB\DatabaseHelper.cs" />
     <Compile Include="DB\ImportExportManager.cs" />
     <Compile Include="DB\Models\BlockObject.cs" />
+    <Compile Include="UI\Windows\UserGuide.xaml.cs">
+      <DependentUpon>UserGuide.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\DataChangedEventArgs.cs" />
     <Compile Include="DB\Models\ProjectData.cs" />
     <Compile Include="Calc\FirstDecompositionCalculator.cs" />
@@ -214,6 +217,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\Windows\UserGuide.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Windows\WelcomeScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

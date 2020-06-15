@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using WpfApp2.DB.Models;
 using WpfApp2.UI.Components;
+using WpfApp2.UI.Windows;
+using WpfApp2.Utils;
 
 namespace WpfApp2
 {
@@ -136,6 +139,11 @@ namespace WpfApp2
             Window1 win = new Window1();
             win.Show();
             this.Close();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            new UserGuide().Show();
         }
     }
 }

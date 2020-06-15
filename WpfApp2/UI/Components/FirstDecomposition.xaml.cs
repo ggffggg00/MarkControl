@@ -81,8 +81,8 @@ namespace WpfApp2.UI.Components
             ChartHelper.styleChart(chart);
 
             Series mSeries = ChartHelper.constructSeries("Фазовая траектория", chart);
-            Series mPSeries = ChartHelper.constructSeries("Нижний предел", chart);
-            Series mMSeries = ChartHelper.constructSeries("Верхний предел", chart);
+            Series mPSeries = ChartHelper.constructSeries("Верхний предел", chart);
+            Series mMSeries = ChartHelper.constructSeries("Нижний предел", chart);
             Series mPredictSeries = ChartHelper.constructSeries("Прогнозируемая траектория", chart);
 
             for (int i = 0; i<data.epochCount; i++)

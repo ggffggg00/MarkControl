@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="598.5" MinWidth="1053.5" Height="598.5" Width="1053.5" ResizeMode="CanResizeWithGrip" Background="#FF2F343F" WindowStartupLocation="CenterScreen">
+        Title="Mark Control v.1.1" MinHeight="598.5" MinWidth="1053.5" Height="598.5" Width="1053.5" ResizeMode="CanResizeWithGrip" Background="#FF2F343F" WindowStartupLocation="CenterScreen">
 
 
     <Window.Resources>
@@ -95,6 +95,7 @@
                     <StackPanel Orientation="Horizontal" Margin="0,0,10,0" Height="23" VerticalAlignment="Center">
                         <TextBlock x:Name="projectNameIndicator" Text="Вариант 11" Padding="10,1,10,0" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Button Content="Закрыть проект" Style="{StaticResource ButtonStyle}" Padding="10,0" Margin="0,0,1,0" HorizontalContentAlignment="Center" Height="Auto" Width="102" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
+                        <Button Content="Помощь" Style="{StaticResource ButtonStyle}" Padding="10,0" Margin="0,3.5,1,3.5" HorizontalContentAlignment="Center" Height="Auto" Width="102" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click_1"/>
                     </StackPanel>
                 </StatusBarItem>
             </StatusBar>

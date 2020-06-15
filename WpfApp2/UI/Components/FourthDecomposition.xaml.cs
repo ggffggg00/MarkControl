@@ -96,7 +96,7 @@ namespace WpfApp2.UI.Components
                     double markValue = data.marks[epoch].marks[mark];
                     DataPoint point = ChartHelper.constructDataPoint(epoch, markValue);
                     point.MarkerSize = 10;
-                    //point.ToolTip = string.Format("Эпоха: {0}, Высота: {1}", epoch, markValue);
+                    point.ToolTip = string.Format("Эпоха: {0}, Высота: {1}", epoch, markValue);
                     ser.Points.Add(point);
 
                     if (markValue > chartMax)

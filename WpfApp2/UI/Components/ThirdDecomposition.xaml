@@ -6,7 +6,7 @@
              xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
              xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
              xmlns:winformchart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
-             xmlns:local="clr-namespace:WpfApp2.UI.Components"
+             xmlns:local="clr-namespace:WpfApp2.Utils"
              xmlns:Graphite="clr-namespace:Orbifold.Graphite;assembly=Orbifold.Graphite"
              mc:Ignorable="d" 
              Margin="-3,0,0,0"

@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace WpfApp2.UI.Components
+namespace WpfApp2.Utils
 
 {
     public class DataRowViewConverter : IValueConverter
