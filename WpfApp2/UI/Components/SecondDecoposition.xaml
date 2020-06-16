@@ -30,7 +30,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*" MinWidth="250" MaxWidth="520" />
+            <ColumnDefinition Width="*" MinWidth="250" MaxWidth="720" />
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
@@ -91,8 +91,8 @@
             <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,0" Height="Auto" Padding="5">
                 <StackPanel Margin="0">
                     <Label  Content="График фазовых значений" Style="{StaticResource LargeLabel}" />
-                    <WindowsFormsHost x:Name="host" Background="#22252A">
-                        <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" Height="180" BackColor="#FF2F343F">
+                    <WindowsFormsHost x:Name="host" Background="#22252A" Height="150">
+                        <winformchart:Chart x:Name="MyWinformChart" Dock="Fill" Height="180" BackColor="#FF2F343F" MouseEnter="MyWinformChart_MouseEnter" MouseLeave="MyWinformChart_MouseLeave">
                             <winformchart:Chart.ChartAreas>
                                 <winformchart:ChartArea BackColor="#FF2F343F" Name="График"/>
                             </winformchart:Chart.ChartAreas>
@@ -105,7 +105,7 @@
                 </StackPanel>
             </Border>
             <Border BorderBrush="#FF717B8B" BorderThickness="1" Margin="5,5,5,5"  Height="Auto" Padding="5">
-                <Image  RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" x:Name="img" Height="Auto" ></Image>
+                <Image  RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" x:Name="img" Height="Auto" MouseLeftButtonDown="img_MouseLeftButtonDown" ></Image>
             </Border>
         </StackPanel>
 

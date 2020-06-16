@@ -13,12 +13,15 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Windows.Forms.Integration;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfApp2.Calc;
 using WpfApp2.DB.Models;
+using WpfApp2.UI.Windows;
 using WpfApp2.Utils;
 
 namespace WpfApp2.UI.Components
@@ -252,5 +255,37 @@ namespace WpfApp2.UI.Components
 
         #endregion
 
+        const double MINIMIZED_HEIGHT = 150;        //Нормальная высота
+        const double MAXIMIZED_HEIGHT = 350;        //Высота увеличенного графика
+        const double ANIMATION_DURATION = 150;      //Длительность анимации в миллисекундах
+
+        //Событие срабатывает при наведении курсора мыши на график в боковой панели
+        private void MyWinformChart_MouseEnter(object sender, EventArgs e)
+        {
+            //Создаем объект анимации значения
+            //Эта штука работает довольно просто, мы говорим ей от какого числа и до какого числа перебрать значения
+            //Потом мы указываем, значения какого параметра и какого элемента мы перебираем
+            //А потом просто запускаем анимацию
+            DoubleAnimation buttonAnimation = new DoubleAnimation();                //Создаем объект анимации
+            buttonAnimation.From = MINIMIZED_HEIGHT;                                //Указываем начальное значение, от которого будет начинаться перебор
+            buttonAnimation.To = MAXIMIZED_HEIGHT;                                  //Указываем конечное значение, до которого будет происходить перебор
+            buttonAnimation.Duration = TimeSpan.FromMilliseconds(ANIMATION_DURATION);   //Указываем время, за которое значения должны быть перебраны
+
+            host.BeginAnimation(WindowsFormsHost.HeightProperty, buttonAnimation);      //Запускаем анимацию в контейнере графика, что надо записывать перебираемые значения в свойство высоты
+        }
+
+        private void MyWinformChart_MouseLeave(object sender, EventArgs e)
+        {
+            DoubleAnimation buttonAnimation = new DoubleAnimation();
+            buttonAnimation.From = MAXIMIZED_HEIGHT;
+            buttonAnimation.To = MINIMIZED_HEIGHT;
+            buttonAnimation.Duration = TimeSpan.FromMilliseconds(ANIMATION_DURATION);
+            host.BeginAnimation(WindowsFormsHost.HeightProperty, buttonAnimation);
+        }
+
+        private void img_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            new ImageViewer(data.img).Show();
+        }
     }
 }

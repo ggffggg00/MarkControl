@@ -16,7 +16,8 @@ namespace WpfApp2.UI.Windows
     /// </summary>
     public partial class BlockInputFormDialog : Window
     {
-
+        bool hasSubBlocks = false;
+        string parentBlockName = "";
        
         public List<BlockObject> Result { get; set; }
 
@@ -35,12 +36,17 @@ namespace WpfApp2.UI.Windows
             Init(blockCount, Enumerable.Range(1,  marksCount).ToArray(), img, true);
         }
 
-        public BlockInputFormDialog(int blockCount, int[] marks, byte[] img)
+        public BlockInputFormDialog(int blockCount, int[] marks, byte[] img, string parentBlockName)
         {
+            this.hasSubBlocks = true;
+            this.parentBlockName = parentBlockName;
             Init(blockCount, marks, img);   
         }
 
         void Init(int blockCount, int[] marks, byte[] imageData, bool maxEqalsMin = false) {
+
+            
+
             this.marks = marks;
             this.blocks = generateBlockArray(blockCount);
 
@@ -53,8 +59,8 @@ namespace WpfApp2.UI.Windows
                 
 
                 InitializeComponent();
-            
-                fillOrUpdateList();
+
+            fillOrUpdateList();
                 updateIndicator();
                 LV.ItemsSource = listViewCollection;
                 ApplyButton.Visibility = Visibility.Hidden;
@@ -66,8 +72,13 @@ namespace WpfApp2.UI.Windows
         {
             string[] arr = new string[blockCount];
 
-            foreach (int currBlockIndex in Enumerable.Range(0, blockCount))
-                arr[currBlockIndex] = ((char)(65 + currBlockIndex)).ToString();
+            foreach (int currBlockIndex in Enumerable.Range(0, blockCount)) {
+                if(hasSubBlocks)
+                    arr[currBlockIndex] = parentBlockName + (currBlockIndex + 1);
+                else
+                    arr[currBlockIndex] = ((char)(65 + currBlockIndex)).ToString();
+            }
+                
 
             return arr;
 

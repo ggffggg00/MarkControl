@@ -155,7 +155,7 @@
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Header="Декомпозиция" Foreground="#d3dae3" FontSize="12" x:Name="DecompositionTab" Visibility="Hidden">
+            <TabItem Header="Анализ подблока" Foreground="#d3dae3" FontSize="12" x:Name="DecompositionTab" Visibility="Hidden">
                 <Grid Background="#22252a">
                     <ContentControl x:Name="cc" Content=""/>
                 </Grid>

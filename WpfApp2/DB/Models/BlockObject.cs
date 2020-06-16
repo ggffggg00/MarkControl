@@ -1,14 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WpfApp2.DB.Models
 {
     public class BlockObject
     {
+        bool hasSubBlock = false;
         public string blockName { get; set; }
         public int[] marks { get; set; }
 
@@ -28,9 +26,14 @@ namespace WpfApp2.DB.Models
             this.marks = marks;
         }
 
+        public BlockObject subblock() {
+            this.hasSubBlock = true;
+            return this;
+        }
+
         public override string ToString()
         {
-            return "Блок " + this.blockName + ": " + String.Join(", ", this.marks);
+            return (hasSubBlock ? "Подблок " : "Блок ") + this.blockName + ": " + String.Join(", ", this.marks);
         }
     }
 }

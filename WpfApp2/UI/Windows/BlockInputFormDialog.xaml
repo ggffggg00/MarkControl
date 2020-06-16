@@ -77,7 +77,7 @@
             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Width="149" Height="260">
                 <Border BorderBrush="White" BorderThickness="1" Margin="0" VerticalAlignment="Top" Padding="1,20">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Label Content="Текущий блок" Style="{StaticResource LargeLabel}" />
+                        <Label x:Name="currentBlockLabel" Content="Текущий блок" Style="{StaticResource LargeLabel}" />
                         <Label x:Name="BI" Content="А" Style="{StaticResource LargeLabel}" FontSize="36" HorizontalAlignment="Center" />
                         <Label x:Name="MI" Content="5 4 3 12" Style="{StaticResource LargeLabel}" FontSize="12" HorizontalAlignment="Center" />
                     </StackPanel>

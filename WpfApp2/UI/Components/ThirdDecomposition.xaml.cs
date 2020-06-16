@@ -73,7 +73,7 @@ namespace WpfApp2.UI.Components
         {
             LV.Items.Clear();
             foreach (BlockObject blData in subBlockList)
-                LV.Items.Add(new CheckBoxListViewItem(blData.ToString()));
+                LV.Items.Add(new CheckBoxListViewItem(blData.subblock().ToString()));
         }
 
 
@@ -155,7 +155,7 @@ namespace WpfApp2.UI.Components
             }
 
 
-            BlockInputFormDialog dlg = new BlockInputFormDialog(blockCount, marksInBlock, data.img);
+            BlockInputFormDialog dlg = new BlockInputFormDialog(blockCount, marksInBlock, data.img, parentBlock.blockName);
             if (dlg.ShowDialog() != true)
                 return;
 
