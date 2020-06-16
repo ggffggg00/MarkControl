@@ -8,7 +8,7 @@
              xmlns:winformchart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
         xmlns:local="clr-namespace:WpfApp2.UI.Windows"
         mc:Ignorable="d"
-        Title="ChartWindow" Height="387.438" Width="604.955" Background="#FF2F343F" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="CanResizeWithGrip">
+        Title="Схема объекта" Height="387.438" Width="604.955" Background="#FF2F343F" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Image x:Name="image" />
     </Grid>

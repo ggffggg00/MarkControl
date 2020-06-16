@@ -280,6 +280,7 @@ namespace WpfApp2.UI.Components
             buttonAnimation.From = MAXIMIZED_HEIGHT;
             buttonAnimation.To = MINIMIZED_HEIGHT;
             buttonAnimation.Duration = TimeSpan.FromMilliseconds(ANIMATION_DURATION);
+
             host.BeginAnimation(WindowsFormsHost.HeightProperty, buttonAnimation);
         }
 
